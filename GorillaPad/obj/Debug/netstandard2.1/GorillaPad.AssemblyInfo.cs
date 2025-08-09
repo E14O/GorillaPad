@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GorillaPad")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0bf1fce9e3f017acae13b680563ec6a1c119db95")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+635e52702ff2e116c44bee6f359de432263359d8")]
 [assembly: System.Reflection.AssemblyProductAttribute("GorillaPad")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GorillaPad")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

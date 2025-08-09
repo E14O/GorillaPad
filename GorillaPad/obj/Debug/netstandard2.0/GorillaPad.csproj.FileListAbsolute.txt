@@ -1,5 +1,0 @@
-C:\Repos\GorillaPad\GorillaPad\obj\Debug\netstandard2.0\GorillaPad.csproj.AssemblyReference.cache
-C:\Repos\GorillaPad\GorillaPad\obj\Debug\netstandard2.0\GorillaPad.GeneratedMSBuildEditorConfig.editorconfig
-C:\Repos\GorillaPad\GorillaPad\obj\Debug\netstandard2.0\GorillaPad.AssemblyInfoInputs.cache
-C:\Repos\GorillaPad\GorillaPad\obj\Debug\netstandard2.0\GorillaPad.AssemblyInfo.cs
-C:\Repos\GorillaPad\GorillaPad\obj\Debug\netstandard2.0\GorillaPad.csproj.CoreCompileInputs.cache
