@@ -14,8 +14,13 @@ namespace GorillaPad.Interfaces
         {
             GameObject MainButton = ContentLoader.GorillaPadMainParent.transform.GetChild(1).GetChild(7).gameObject;
             GameObject PowerButton = ContentLoader.GorillaPadMainParent.transform.GetChild(1).GetChild(3).gameObject;
+            GameObject VolUp = ContentLoader.GorillaPadMainParent.transform.GetChild(1).GetChild(6).gameObject;
+            GameObject VolDown = ContentLoader.GorillaPadMainParent.transform.GetChild(1).GetChild(5).gameObject;
+
             GorillaPadButton.Create(MainButton, MainButtonFunction);
             GorillaPadButton.Create(PowerButton, PowerButtonFunction);
+            GorillaPadButton.Create(VolUp, VolumeUpButtonFunction);
+            GorillaPadButton.Create(VolDown, VolumeDownButtonFunction);
         }
 
         void MainButtonFunction()
@@ -37,13 +42,25 @@ namespace GorillaPad.Interfaces
             if (GPPoweredOn)
             {
                 ScreenManager.LockScreen.SetActive(false); ScreenManager.HomeScreen.SetActive(false); ScreenManager.TopBar.SetActive(false);
+                ContentLoader.PowerSound.GetComponent<AudioSource>().Play();
                 GPPoweredOn = false;
             }
             else if (!GPPoweredOn)
             {
                 ScreenManager.LockScreen.SetActive(true); ScreenManager.TopBar.SetActive(true);
+                ContentLoader.PowerSound.GetComponent<AudioSource>().Play();
                 GPPoweredOn = true;
             }
+        }
+
+        void VolumeUpButtonFunction()
+        {
+
+        }
+
+        void VolumeDownButtonFunction()
+        {
+
         }
     }
 }

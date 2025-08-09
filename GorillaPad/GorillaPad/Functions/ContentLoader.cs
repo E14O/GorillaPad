@@ -9,7 +9,7 @@ namespace GorillaPad.Functions
     {
         public static bool _AssetLoaded = false;
         public static bool _SoundsLoaded = false;
-        public static GameObject GorillaPad, GorillaPadMainParent;
+        public static GameObject GorillaPad, GorillaPadMainParent, PowerSound, ButtonSound;
 
         public static void LoadAssetBundle()
         {
@@ -18,6 +18,10 @@ namespace GorillaPad.Functions
             GorillaPad = Instantiate(GorillaPad);
             GorillaPad.name = $"{PhotonNetwork.LocalPlayer.NickName}'s GorillaPad";
             SetPos();
+
+            PowerSound = GorillaPad.transform.GetChild(0).GetChild(3).gameObject;
+            ButtonSound = GorillaPad.transform.GetChild(0).GetChild(4).gameObject;
+
 
             Debug.Log($"[GorillaPad]- Asset Loaded: {GorillaPad.name}");
             _AssetLoaded = true;

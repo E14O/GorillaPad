@@ -1,4 +1,5 @@
 ﻿using System;
+using GorillaPad.Functions;
 using UnityEngine;
 
 namespace GorillaPad.Logic.UI
@@ -27,6 +28,8 @@ namespace GorillaPad.Logic.UI
         public override void ButtonActivation()
         {
             base.ButtonActivation();
+            pressButtonSoundIndex = 0;
+            ContentLoader.ButtonSound.GetComponent<AudioSource>().Play();
             OnButtonPress?.Invoke();
         }
     }
