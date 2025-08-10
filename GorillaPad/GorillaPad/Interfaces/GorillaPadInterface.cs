@@ -1,6 +1,7 @@
 ﻿using GorillaPad.Logic.Screens;
 using GorillaPad.Logic.UI;
 using GorillaPad.Tools;
+using PlayFab.ClientModels;
 using UnityEngine;
 
 namespace GorillaPad.Interfaces
@@ -17,10 +18,10 @@ namespace GorillaPad.Interfaces
             GameObject VolUp = ContentLoader.BundleParent.transform.GetChild(1).GetChild(6).gameObject;
             GameObject VolDown = ContentLoader.BundleParent.transform.GetChild(1).GetChild(5).gameObject;
 
-            PadButton.Create(MainButton, MainButtonFunction);
-            PadButton.Create(PowerButton, PowerButtonFunction);
-            PadButton.Create(VolUp, VolumeUpButtonFunction);
-            PadButton.Create(VolDown, VolumeDownButtonFunction);
+            PadButton.Create(MainButton, PadButtonSound.Button, MainButtonFunction);
+            PadButton.Create(VolUp, PadButtonSound.Button, VolumeUpButtonFunction);
+            PadButton.Create(VolDown, PadButtonSound.Button, VolumeDownButtonFunction);
+            PadButton.Create(PowerButton, PadButtonSound.Power, PowerButtonFunction);
         }
 
         void MainButtonFunction()
@@ -42,21 +43,11 @@ namespace GorillaPad.Interfaces
             if (GPPoweredOn)
             {
                 ScreenManager.LockScreen.SetActive(false); ScreenManager.HomeScreen.SetActive(false); ScreenManager.TopBar.SetActive(false);
-
-                AudioSource PowerAudio = null, ButtonAudio = null;
-                ContentLoader.GetSounds(ref PowerAudio, ref ButtonAudio);
-                PowerAudio.Play();
-
                 GPPoweredOn = false;
             }
             else if (!GPPoweredOn)
             {
                 ScreenManager.LockScreen.SetActive(true); ScreenManager.TopBar.SetActive(true);
-
-                AudioSource PowerAudio = null, ButtonAudio = null;
-                ContentLoader.GetSounds(ref PowerAudio, ref ButtonAudio);
-                PowerAudio.Play();
-
                 GPPoweredOn = true;
             }
         }

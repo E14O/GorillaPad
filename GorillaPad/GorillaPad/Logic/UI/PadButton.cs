@@ -4,10 +4,13 @@ using UnityEngine;
 
 namespace GorillaPad.Logic.UI
 {
+
     public class PadButton : GorillaPressableButton
     {
         private Action OnButtonPress;
-        public static PadButton Create(GameObject Object, Action ExecuteFunction)
+        private PadButtonSound selectedSound;
+
+        public static PadButton Create(GameObject Object, PadButtonSound soundType, Action ExecuteFunction)
         {
             PadButton PBScript = Object.GetComponent<PadButton>() ?? Object.AddComponent<PadButton>();
             BoxCollider ObjectCollider = Object.GetComponent<BoxCollider>() ?? Object.AddComponent<BoxCollider>();
@@ -16,6 +19,7 @@ namespace GorillaPad.Logic.UI
             Object.layer = 18;
 
             PBScript.OnButtonPress = ExecuteFunction;
+            PBScript.selectedSound = soundType;
             return PBScript;
         }
 
@@ -24,14 +28,23 @@ namespace GorillaPad.Logic.UI
             base.ButtonActivation();
             pressButtonSoundIndex = 0;
 
-            // do what you can with this 
             AudioSource powerAudio = null;
             AudioSource buttonAudio = null;
             ContentLoader.GetSounds(ref powerAudio, ref buttonAudio);
-            buttonAudio.Play();
 
-            OnButtonPress?.Invoke();
+            if (selectedSound == PadButtonSound.Power)
+                powerAudio.Play();
+            else if (selectedSound == PadButtonSound.Button)
+                buttonAudio.Play();
+
+            OnButtonPress.Invoke();
         }
+    }
 
+    public enum PadButtonSound
+    {
+        Power,
+        Button
     }
 }
+
