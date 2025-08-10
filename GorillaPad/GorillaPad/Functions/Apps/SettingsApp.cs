@@ -1,10 +1,10 @@
 ﻿using GorillaPad.Interfaces;
 
-namespace GorillaPad.Logic.Apps
+namespace GorillaPad.Functions.Apps
 {
-    public class MusicApp : AppSystem
+    public class SettingsApp : AppSystem
     {
-        public override string AppName => "Music";
+        public override string AppName => "Settings";
         public override string AppVersion => "0.0.1";
 
         public override void OnAppOpen()

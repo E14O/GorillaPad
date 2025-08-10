@@ -1,10 +1,10 @@
-﻿using GorillaPad.Interfaces;
-using GorillaPad.Logic.Screens;
+﻿using GorillaPad.Functions.Screens;
+using GorillaPad.Interfaces;
 using GorillaPad.Tools;
 using Photon.Pun;
 using UnityEngine;
 
-namespace GorillaPad.Logic
+namespace GorillaPad.Functions
 {
     internal class Main : MonoBehaviour
     {
@@ -23,7 +23,7 @@ namespace GorillaPad.Logic
 
             ContentLoader.Bundle.AddComponent<ScreenManager>();
             ContentLoader.Bundle.AddComponent<GorillaPadInterface>();
-            ContentLoader.BundleParent.AddComponent<GorillaPadHoldableEngine>();
+            ContentLoader.BundleParent.AddComponent<HoldableEngine>();
         }
     }
 }

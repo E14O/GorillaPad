@@ -1,11 +1,10 @@
 ﻿using GorillaPad.Interfaces;
-using GorillaPad.Logic.Screens;
 
-namespace GorillaPad.Logic.Apps
+namespace GorillaPad.Functions.Apps
 {
-    public class ScoreboardApp : AppSystem
+    public class MusicApp : AppSystem
     {
-        public override string AppName => "Scoreboard";
+        public override string AppName => "Music";
         public override string AppVersion => "0.0.1";
 
         public override void OnAppOpen()

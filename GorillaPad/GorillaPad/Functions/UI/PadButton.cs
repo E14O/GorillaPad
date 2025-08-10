@@ -2,15 +2,16 @@
 using GorillaPad.Tools;
 using UnityEngine;
 
-namespace GorillaPad.Logic.UI
+namespace GorillaPad.Functions.UI
 {
 
     public class PadButton : GorillaPressableButton
     {
         private Action OnButtonPress;
-        private PadButtonSound selectedSound;
 
-        public static PadButton Create(GameObject Object, PadButtonSound soundType, Action ExecuteFunction)
+        private SelectedAudio selectedSound;
+
+        public static PadButton Create(GameObject Object, SelectedAudio soundType, Action ExecuteFunction)
         {
             PadButton PBScript = Object.GetComponent<PadButton>() ?? Object.AddComponent<PadButton>();
             BoxCollider ObjectCollider = Object.GetComponent<BoxCollider>() ?? Object.AddComponent<BoxCollider>();
@@ -32,19 +33,19 @@ namespace GorillaPad.Logic.UI
             AudioSource buttonAudio = null;
             ContentLoader.GetSounds(ref powerAudio, ref buttonAudio);
 
-            if (selectedSound == PadButtonSound.Power)
+            if (selectedSound == SelectedAudio.PowerAudio)
                 powerAudio.Play();
-            else if (selectedSound == PadButtonSound.Button)
+            else if (selectedSound == SelectedAudio.ButtonAudio)
                 buttonAudio.Play();
 
             OnButtonPress.Invoke();
         }
     }
 
-    public enum PadButtonSound
+    public enum SelectedAudio
     {
-        Power,
-        Button
+        PowerAudio,
+        ButtonAudio
     }
 }
 

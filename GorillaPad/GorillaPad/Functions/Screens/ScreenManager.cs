@@ -1,10 +1,9 @@
 ﻿using System;
-using GorillaPad.Logic.UI;
 using GorillaPad.Tools;
 using TMPro;
 using UnityEngine;
 
-namespace GorillaPad.Logic.Screens
+namespace GorillaPad.Functions.Screens
 {
     public class ScreenManager : MonoBehaviour
     {

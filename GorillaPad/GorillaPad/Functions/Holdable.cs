@@ -24,7 +24,7 @@ SOFTWARE.
 using GorillaLocomotion;
 using UnityEngine;
 
-public class GorillaPadHoldableEngine : HoldableObject
+public class HoldableEngine : HoldableObject
 {
     public bool
         InHand = false,
@@ -40,6 +40,7 @@ public class GorillaPadHoldableEngine : HoldableObject
     public virtual void OnGrab(bool isLeft)
     {
         transform.localScale = GorillaPad.Constants.RightHand.Scale;
+
         if (isLeft)
         {
             transform.SetLocalPositionAndRotation(GorillaPad.Constants.LeftHand.Pos, GorillaPad.Constants.LeftHand.Rot);

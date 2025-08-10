@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using GorillaPad.Logic.UI;
 using GorillaPad.Tools;
 using System.Linq;
 using UnityEngine;
+using GorillaPad.Functions.UI;
 
 namespace GorillaPad.Interfaces
 {
     internal class AppCreation : MonoBehaviour
     {
-        private List<AppSystem> Apps = new List<AppSystem>();
+        private List<AppSystem> Apps = new();
         private GameObject AppParent;
 
         public void Start()
@@ -32,12 +32,11 @@ namespace GorillaPad.Interfaces
             {
                 if (App.AppName == "Scoreboard")
                 {
-                    Debug.LogError($"{Apps}");
-                    Debug.LogError("CREATING SCOREBOARD APP");
+                    PadLogging.LogError($"{Apps}");
+                    PadLogging.LogError($"CREATING SCOREBOARD APP");
                     var SBAPP = AppParent.transform.GetChild(1).gameObject;
                     SBAPP.SetActive(true);
-                    PadButton.Create(SBAPP, PadButtonSound.Button, App.OnAppOpen);
-
+                    PadButton.Create(SBAPP, SelectedAudio.ButtonAudio, App.OnAppOpen);
                 }
                 else if (App.AppName == "Settings")
                 {

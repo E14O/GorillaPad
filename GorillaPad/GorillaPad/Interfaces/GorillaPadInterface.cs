@@ -1,7 +1,6 @@
-﻿using GorillaPad.Logic.Screens;
-using GorillaPad.Logic.UI;
+﻿using GorillaPad.Functions.Screens;
+using GorillaPad.Functions.UI;
 using GorillaPad.Tools;
-using PlayFab.ClientModels;
 using UnityEngine;
 
 namespace GorillaPad.Interfaces
@@ -18,10 +17,10 @@ namespace GorillaPad.Interfaces
             GameObject VolUp = ContentLoader.BundleParent.transform.GetChild(1).GetChild(6).gameObject;
             GameObject VolDown = ContentLoader.BundleParent.transform.GetChild(1).GetChild(5).gameObject;
 
-            PadButton.Create(MainButton, PadButtonSound.Button, MainButtonFunction);
-            PadButton.Create(VolUp, PadButtonSound.Button, VolumeUpButtonFunction);
-            PadButton.Create(VolDown, PadButtonSound.Button, VolumeDownButtonFunction);
-            PadButton.Create(PowerButton, PadButtonSound.Power, PowerButtonFunction);
+            PadButton.Create(MainButton, SelectedAudio.ButtonAudio, MainButtonFunction);
+            PadButton.Create(VolUp, SelectedAudio.ButtonAudio, VolumeUpButtonFunction);
+            PadButton.Create(VolDown, SelectedAudio.ButtonAudio, VolumeDownButtonFunction);
+            PadButton.Create(PowerButton, SelectedAudio.PowerAudio, PowerButtonFunction);
         }
 
         void MainButtonFunction()
