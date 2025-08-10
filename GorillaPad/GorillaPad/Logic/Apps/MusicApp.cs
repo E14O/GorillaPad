@@ -2,9 +2,9 @@
 
 namespace GorillaPad.Logic.Apps
 {
-    public class Credits : AppSystem
+    public class MusicApp : AppSystem
     {
-        public override string AppName => "Credits";
+        public override string AppName => "Music";
         public override string AppVersion => "0.0.1";
 
         public override void OnAppOpen()

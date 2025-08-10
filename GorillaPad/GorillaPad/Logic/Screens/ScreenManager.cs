@@ -1,6 +1,6 @@
 ﻿using System;
-using GorillaPad.Functions;
 using GorillaPad.Logic.UI;
+using GorillaPad.Tools;
 using TMPro;
 using UnityEngine;
 
@@ -12,9 +12,9 @@ namespace GorillaPad.Logic.Screens
 
         void Start()
         {
-            HomeScreen = ContentLoader.GorillaPadMainParent.transform.GetChild(2).GetChild(1).gameObject;
-            LockScreen = ContentLoader.GorillaPadMainParent.transform.GetChild(2).GetChild(0).gameObject;
-            TopBar = ContentLoader.GorillaPadMainParent.transform.GetChild(0).gameObject;
+            HomeScreen = ContentLoader.BundleParent.transform.GetChild(2).GetChild(1).gameObject;
+            LockScreen = ContentLoader.BundleParent.transform.GetChild(2).GetChild(0).gameObject;
+            TopBar = ContentLoader.BundleParent.transform.GetChild(0).gameObject;
 
             SetupTopBar();
         }

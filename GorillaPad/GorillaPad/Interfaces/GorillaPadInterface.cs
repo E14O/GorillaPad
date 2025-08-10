@@ -1,6 +1,6 @@
-﻿using GorillaPad.Functions;
+﻿using GorillaPad.Logic.Screens;
 using GorillaPad.Logic.UI;
-using GorillaPad.Logic.Screens;
+using GorillaPad.Tools;
 using UnityEngine;
 
 namespace GorillaPad.Interfaces
@@ -12,22 +12,22 @@ namespace GorillaPad.Interfaces
 
         void Start()
         {
-            GameObject MainButton = ContentLoader.GorillaPadMainParent.transform.GetChild(1).GetChild(7).gameObject;
-            GameObject PowerButton = ContentLoader.GorillaPadMainParent.transform.GetChild(1).GetChild(3).gameObject;
-            GameObject VolUp = ContentLoader.GorillaPadMainParent.transform.GetChild(1).GetChild(6).gameObject;
-            GameObject VolDown = ContentLoader.GorillaPadMainParent.transform.GetChild(1).GetChild(5).gameObject;
+            GameObject MainButton = ContentLoader.BundleParent.transform.GetChild(1).GetChild(7).gameObject;
+            GameObject PowerButton = ContentLoader.BundleParent.transform.GetChild(1).GetChild(3).gameObject;
+            GameObject VolUp = ContentLoader.BundleParent.transform.GetChild(1).GetChild(6).gameObject;
+            GameObject VolDown = ContentLoader.BundleParent.transform.GetChild(1).GetChild(5).gameObject;
 
-            GorillaPadButton.Create(MainButton, MainButtonFunction);
-            GorillaPadButton.Create(PowerButton, PowerButtonFunction);
-            GorillaPadButton.Create(VolUp, VolumeUpButtonFunction);
-            GorillaPadButton.Create(VolDown, VolumeDownButtonFunction);
+            PadButton.Create(MainButton, MainButtonFunction);
+            PadButton.Create(PowerButton, PowerButtonFunction);
+            PadButton.Create(VolUp, VolumeUpButtonFunction);
+            PadButton.Create(VolDown, VolumeDownButtonFunction);
         }
 
         void MainButtonFunction()
         {
             if (GPUnlocked && GPPoweredOn)
             {
-                ScreenManager.LockScreen.SetActive(true); ScreenManager.HomeScreen.SetActive(false); 
+                ScreenManager.LockScreen.SetActive(true); ScreenManager.HomeScreen.SetActive(false);
                 GPUnlocked = false;
             }
             else if (!GPUnlocked && GPPoweredOn)
@@ -42,13 +42,21 @@ namespace GorillaPad.Interfaces
             if (GPPoweredOn)
             {
                 ScreenManager.LockScreen.SetActive(false); ScreenManager.HomeScreen.SetActive(false); ScreenManager.TopBar.SetActive(false);
-                ContentLoader.PowerSound.GetComponent<AudioSource>().Play();
+
+                AudioSource PowerAudio = null, ButtonAudio = null;
+                ContentLoader.GetSounds(ref PowerAudio, ref ButtonAudio);
+                PowerAudio.Play();
+
                 GPPoweredOn = false;
             }
             else if (!GPPoweredOn)
             {
                 ScreenManager.LockScreen.SetActive(true); ScreenManager.TopBar.SetActive(true);
-                ContentLoader.PowerSound.GetComponent<AudioSource>().Play();
+
+                AudioSource PowerAudio = null, ButtonAudio = null;
+                ContentLoader.GetSounds(ref PowerAudio, ref ButtonAudio);
+                PowerAudio.Play();
+
                 GPPoweredOn = true;
             }
         }

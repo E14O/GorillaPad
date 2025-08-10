@@ -1,6 +1,6 @@
-﻿using GorillaPad.Functions;
-using GorillaPad.Interfaces;
+﻿using GorillaPad.Interfaces;
 using GorillaPad.Logic.Screens;
+using GorillaPad.Tools;
 using Photon.Pun;
 using UnityEngine;
 
@@ -13,17 +13,17 @@ namespace GorillaPad.Logic
         void Start()
         {
             instance = this;
-            GorillaTagger.OnPlayerSpawned(GorillaPadMain);
+            GorillaTagger.OnPlayerSpawned(Initialization);
         }
 
-        void GorillaPadMain()
+        void Initialization()
         {
             PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { Constants.CustomProp, Constants.Version } });
+            ContentLoader.InitialiseContent();
 
-            ContentLoader.LoadAssetBundle();
-            ContentLoader.GorillaPad.AddComponent<ScreenManager>();
-            ContentLoader.GorillaPad.AddComponent<GorillaPadInterface>();
-            ContentLoader.GorillaPadMainParent.AddComponent<GorillaPadHoldableEngine>();
+            ContentLoader.Bundle.AddComponent<ScreenManager>();
+            ContentLoader.Bundle.AddComponent<GorillaPadInterface>();
+            ContentLoader.BundleParent.AddComponent<GorillaPadHoldableEngine>();
         }
     }
 }

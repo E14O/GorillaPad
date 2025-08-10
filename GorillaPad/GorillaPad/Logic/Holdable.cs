@@ -39,27 +39,22 @@ public class GorillaPadHoldableEngine : HoldableObject
     public bool firstgrab = true;
     public virtual void OnGrab(bool isLeft)
     {
-
-        transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+        transform.localScale = GorillaPad.Constants.RightHand.Scale;
         if (isLeft)
         {
-            transform.localPosition = new Vector3(-0.14f, 0.06f, 0.05f);
-            transform.localRotation = Quaternion.Euler(9.5455f, 180.8367f, 175.2001f);
+            transform.SetLocalPositionAndRotation(GorillaPad.Constants.LeftHand.Pos, GorillaPad.Constants.LeftHand.Rot);
         }
         else
         {
-            transform.localPosition = new Vector3(0.14f, 0.04f, 0.05f);
-            transform.localRotation = Quaternion.Euler(4.9056f, 176.9048f, 193.4551f);
+            transform.SetLocalPositionAndRotation(GorillaPad.Constants.RightHand.Pos, GorillaPad.Constants.RightHand.Rot);
         }
-
     }
 
     public virtual void OnDrop(bool isLeft)
     {
         transform.parent = VRRig.LocalRig.headMesh.transform.parent;
-        transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
-        transform.localPosition = new Vector3(-0.001f, 0.16f, 0.15f);
-        transform.localRotation = Quaternion.Euler(89.6948f, 97.7934f, 98.5541f);
+        transform.SetLocalPositionAndRotation(GorillaPad.Constants.ChestPosition.Pos, GorillaPad.Constants.ChestPosition.Rot);
+        transform.localScale = GorillaPad.Constants.ChestPosition.Scale;
     }
 
     public void Update()

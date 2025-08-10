@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GorillaPad.Interfaces;
-using UnityEngine;
+﻿using GorillaPad.Interfaces;
 
 namespace GorillaPad.Logic.Apps
 {
-    public class Music : AppSystem
+    public class ScoreboardApp : AppSystem
     {
-        public override string AppName => "Music";
+        public override string AppName => "Scoreboard";
         public override string AppVersion => "0.0.1";
 
         public override void OnAppOpen()
