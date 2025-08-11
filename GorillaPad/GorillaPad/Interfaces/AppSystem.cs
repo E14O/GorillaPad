@@ -10,7 +10,7 @@ namespace GorillaPad.Interfaces
         public abstract string AppVersion { get; }
 
         public static bool _AppOpen = false;
-        private static bool AppState = false;
+        private bool LastAppState = false;
 
         public virtual void OnAppOpen()
         {
@@ -23,12 +23,20 @@ namespace GorillaPad.Interfaces
             var ScoreboardScreen = ContentLoader.BundleParent.transform.GetChild(2).GetChild(3).gameObject;
             ScoreboardScreen.SetActive(false);
             // ^ Will be changed to what said above code ^
-            ScreenManager.HomeScreen.SetActive(true);
         }
 
         public virtual void AppContent()
         {
 
+        }
+
+        private void Update()
+        {
+            if (LastAppState && !_AppOpen)
+            {
+                OnAppClose();
+            }
+            LastAppState = _AppOpen;
         }
     }
 }

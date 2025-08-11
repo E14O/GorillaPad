@@ -30,6 +30,7 @@ namespace GorillaPad.Interfaces
                 AppSystem._AppOpen = false;
                 ScreenManager.LockScreen.SetActive(false);
                 ScreenManager.HomeScreen.SetActive(true);
+                AppSystem.OnAppOpened
                 GPUnlocked = true;
             }
             else if (GPUnlocked)
@@ -46,6 +47,7 @@ namespace GorillaPad.Interfaces
             }
 
         }
+
 
         void PowerButtonFunction()
         {

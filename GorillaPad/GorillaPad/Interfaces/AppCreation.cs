@@ -16,7 +16,6 @@ namespace GorillaPad.Interfaces
         public void Start()
         {
             AppParent = ContentLoader.BundleParent.transform.GetChild(2).GetChild(1).GetChild(3).gameObject;
-            if (AppParent != null) return;
 
             var appTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(AppSystem)) && !t.IsAbstract);
 
