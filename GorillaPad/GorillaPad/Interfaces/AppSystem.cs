@@ -35,14 +35,5 @@ namespace GorillaPad.Interfaces
         {
 
         }
-
-        private void Update()
-        {
-            if (!_AppOpen && AppState != _AppOpen)
-            {
-                OnAppClose();
-            }
-            AppState = _AppOpen;
-        }
     }
 }
