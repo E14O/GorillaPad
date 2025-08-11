@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.EnterpriseServices;
-using System.Text;
-using GorillaPad.Functions.Screens;
+﻿using GorillaPad.Functions.Screens;
 using GorillaPad.Tools;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace GorillaPad.Interfaces
 {
@@ -14,7 +9,7 @@ namespace GorillaPad.Interfaces
         public abstract string AppName { get; }
         public abstract string AppVersion { get; }
 
-        public static bool _AppOpen = false; 
+        public static bool _AppOpen = false;
         private static bool AppState = false;
 
         public virtual void OnAppOpen()

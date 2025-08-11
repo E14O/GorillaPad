@@ -1,18 +1,23 @@
 ﻿using BepInEx.Logging;
-using UnityEngine;
 
 namespace GorillaPad.Tools
 {
-    internal class PadLogging : MonoBehaviour
+    internal static class PadLogging
     {
-        private static readonly ManualLogSource logger;
+        private static ManualLogSource logger;
 
-        public static void LogInfo(string message) => logger.LogInfo(message);
-        public static void LogMessage(string message) => logger.LogMessage(message);
-        public static void LogWarning(string message) => logger.LogWarning(message);
-        public static void LogError(string message) => logger.LogError(message);
+        private static ManualLogSource LoggerInstance
+        {
+            get
+            {
+                logger ??= Logger.CreateLogSource(Constants.Name);
+                return logger;
+            }
+        }
+
+        public static void LogInfo(string message) => LoggerInstance.LogInfo(message);
+        public static void LogMessage(string message) => LoggerInstance.LogMessage(message);
+        public static void LogWarning(string message) => LoggerInstance.LogWarning(message);
+        public static void LogError(string message) => LoggerInstance.LogError(message);
     }
 }
-
-
-

@@ -23,7 +23,7 @@ namespace GorillaPad.Tools
 
                 BundlePositions();
 
-                // PadLogging.LogMessage($"Initialization With {Constants.BundleName} Was Successful!");
+                PadLogging.LogMessage($"Initialization With {Constants.BundleName} Was Successful!");
             }
             catch (Exception e)
             {
@@ -44,15 +44,24 @@ namespace GorillaPad.Tools
 
         public static void GetSounds(ref AudioSource PowerAudio, ref AudioSource ButtonAudio)
         {
-            if (!SoundsLoaded)
+            try
             {
-                // PadLogging.LogMessage($"Successfully Loaded AudioSources!");
-                SoundsLoaded = true;
-            }
+                PowerAudio = Bundle.transform.GetChild(0).GetChild(3).gameObject.GetComponent<AudioSource>();
+                ButtonAudio = Bundle.transform.GetChild(0).GetChild(4).gameObject.GetComponent<AudioSource>();
 
-            PowerAudio = Bundle.transform.GetChild(0).GetChild(3).gameObject.GetComponent<AudioSource>();
-            ButtonAudio = Bundle.transform.GetChild(0).GetChild(4).gameObject.GetComponent<AudioSource>();
+                if (!SoundsLoaded)
+                {
+                    PadLogging.LogMessage("Successfully Loaded AudioSources!");
+                    SoundsLoaded = true;
+                }
+            }
+            catch (Exception e)
+            {
+                PadLogging.LogError($"Initialization With AudioSources Was Interrupted {e}");
+                SoundsLoaded = false;
+            }
         }
+
 
         private static AssetBundle InitialiseBundle(string path)
         {

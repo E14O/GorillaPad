@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
-using GorillaPad.Tools;
 using System.Linq;
-using UnityEngine;
+using System.Reflection;
 using GorillaPad.Functions.UI;
+using GorillaPad.Tools;
+using UnityEngine;
 
 namespace GorillaPad.Interfaces
 {
@@ -15,12 +15,9 @@ namespace GorillaPad.Interfaces
 
         public void Start()
         {
-
             AppParent = ContentLoader.BundleParent.transform.GetChild(2).GetChild(1).GetChild(3).gameObject;
-            if (AppParent == null)
-            {
-                return;
-            }
+            if (AppParent != null) return;
+
             var appTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(AppSystem)) && !t.IsAbstract);
 
             foreach (var type in appTypes)
@@ -37,8 +34,8 @@ namespace GorillaPad.Interfaces
             {
                 if (App.AppName == "Scoreboard")
                 {
-                    //PadLogging.LogError($"{Apps}");
-                    //PadLogging.LogError($"CREATING SCOREBOARD APP");
+                    PadLogging.LogError($"{Apps}");
+                    PadLogging.LogError($"CREATING SCOREBOARD APP");
                     var SBAPP = AppParent.transform.GetChild(1).gameObject;
                     SBAPP.SetActive(true);
                     PadButton.Create(SBAPP, SelectedAudio.ButtonAudio, App.OnAppOpen);
