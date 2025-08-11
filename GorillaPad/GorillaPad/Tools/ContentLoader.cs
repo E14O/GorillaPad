@@ -7,8 +7,8 @@ namespace GorillaPad.Tools
     internal class ContentLoader : MonoBehaviour
     {
         public static ContentLoader Instance { get; private set; }
-        public static GameObject Bundle { get; private set; }
-        public static GameObject BundleParent { get; private set; }
+        public static GameObject Bundle;
+        public static GameObject BundleParent;
 
         private static bool SoundsLoaded = false;
 
@@ -23,7 +23,7 @@ namespace GorillaPad.Tools
 
                 BundlePositions();
 
-                PadLogging.LogMessage($"Initialization With {Constants.BundleName} Was Successful!");
+                // PadLogging.LogMessage($"Initialization With {Constants.BundleName} Was Successful!");
             }
             catch (Exception e)
             {
@@ -46,7 +46,7 @@ namespace GorillaPad.Tools
         {
             if (!SoundsLoaded)
             {
-                PadLogging.LogMessage($"Successfully Loaded AudioSources!");
+                // PadLogging.LogMessage($"Successfully Loaded AudioSources!");
                 SoundsLoaded = true;
             }
 

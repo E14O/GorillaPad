@@ -25,16 +25,26 @@ namespace GorillaPad.Interfaces
 
         void MainButtonFunction()
         {
-            if (GPUnlocked && GPPoweredOn)
+            if (AppSystem._AppOpen)
             {
-                ScreenManager.LockScreen.SetActive(true); ScreenManager.HomeScreen.SetActive(false);
-                GPUnlocked = false;
-            }
-            else if (!GPUnlocked && GPPoweredOn)
-            {
-                ScreenManager.LockScreen.SetActive(false); ScreenManager.HomeScreen.SetActive(true);
+                AppSystem._AppOpen = false;
+                ScreenManager.LockScreen.SetActive(false);
+                ScreenManager.HomeScreen.SetActive(true);
                 GPUnlocked = true;
             }
+            else if (GPUnlocked)
+            {
+                ScreenManager.LockScreen.SetActive(true);
+                ScreenManager.HomeScreen.SetActive(false);
+                GPUnlocked = false;
+            }
+            else
+            {
+                ScreenManager.LockScreen.SetActive(false);
+                ScreenManager.HomeScreen.SetActive(true);
+                GPUnlocked = true;
+            }
+
         }
 
         void PowerButtonFunction()

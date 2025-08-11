@@ -10,12 +10,17 @@ namespace GorillaPad.Interfaces
 {
     internal class AppCreation : MonoBehaviour
     {
-        private List<AppSystem> Apps = new();
-        private GameObject AppParent;
+        private List<AppSystem> Apps = new List<AppSystem>();
+        public static GameObject AppParent;
 
         public void Start()
         {
+
             AppParent = ContentLoader.BundleParent.transform.GetChild(2).GetChild(1).GetChild(3).gameObject;
+            if (AppParent == null)
+            {
+                return;
+            }
             var appTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(AppSystem)) && !t.IsAbstract);
 
             foreach (var type in appTypes)
@@ -32,8 +37,8 @@ namespace GorillaPad.Interfaces
             {
                 if (App.AppName == "Scoreboard")
                 {
-                    PadLogging.LogError($"{Apps}");
-                    PadLogging.LogError($"CREATING SCOREBOARD APP");
+                    //PadLogging.LogError($"{Apps}");
+                    //PadLogging.LogError($"CREATING SCOREBOARD APP");
                     var SBAPP = AppParent.transform.GetChild(1).gameObject;
                     SBAPP.SetActive(true);
                     PadButton.Create(SBAPP, SelectedAudio.ButtonAudio, App.OnAppOpen);
