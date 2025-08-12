@@ -11,7 +11,7 @@ namespace GorillaPad.Interfaces
 {
     internal class AppCreation : MonoBehaviour
     {
-        private List<AppSystem> Apps = new List<AppSystem>();
+        private List<AppSystem> Apps = new();
         public static GameObject AppParent;
         private static string PFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         string GorillaPadAppFolder = Path.Combine(PFolder, "GorillaPadApps");

@@ -30,7 +30,7 @@ namespace GorillaPad.Interfaces
                 AppSystem._AppOpen = false;
                 ScreenManager.LockScreen.SetActive(false);
                 ScreenManager.HomeScreen.SetActive(true);
-                AppSystem.OnAppOpened
+                // AppSystem.OnAppOpened
                 GPUnlocked = true;
             }
             else if (GPUnlocked)
