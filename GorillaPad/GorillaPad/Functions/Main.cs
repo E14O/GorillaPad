@@ -25,5 +25,14 @@ namespace GorillaPad.Functions
             ContentLoader.Bundle.AddComponent<GorillaPadInterface>();
             ContentLoader.BundleParent.AddComponent<HoldableEngine>();
         }
+
+        void Update()
+        {
+            if (AppSystem.LastAppState && !AppSystem._AppOpen)
+            {
+               AppSystem.OnAppClose();
+            }
+            AppSystem.LastAppState = AppSystem._AppOpen;
+        }
     }
 }

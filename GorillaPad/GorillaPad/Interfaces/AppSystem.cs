@@ -4,20 +4,20 @@ using UnityEngine;
 
 namespace GorillaPad.Interfaces
 {
-    public abstract class AppSystem : MonoBehaviour
+    public abstract class AppSystem
     {
         public abstract string AppName { get; }
         public abstract string AppVersion { get; }
 
         public static bool _AppOpen = false;
-        private bool LastAppState = false;
+        public static bool LastAppState = false;
 
         public virtual void OnAppOpen()
         {
             ScreenManager.HomeScreen.SetActive(false);
             _AppOpen = true;
         }
-        public virtual void OnAppClose()
+        public static void OnAppClose()
         {
             // new model please put all the screens in a separate parent so i can just set them all to false when a app closes :)
             var ScoreboardScreen = ContentLoader.BundleParent.transform.GetChild(2).GetChild(3).gameObject;
@@ -28,15 +28,6 @@ namespace GorillaPad.Interfaces
         public virtual void AppContent()
         {
 
-        }
-
-        private void Update()
-        {
-            if (LastAppState && !_AppOpen)
-            {
-                OnAppClose();
-            }
-            LastAppState = _AppOpen;
         }
     }
 }

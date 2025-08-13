@@ -5,7 +5,7 @@ using GorillaPad.Interfaces;
 
 namespace GorillaPad.Functions.Apps
 {
-    internal class SettingsApp : AppSystem
+    internal class CreditsApp : AppSystem
     {
         // App That Cannot Be Removed.
         public override string AppName => "Credits";
