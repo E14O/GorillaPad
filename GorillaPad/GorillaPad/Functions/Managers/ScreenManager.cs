@@ -36,9 +36,6 @@ namespace GorillaPad.Functions.Managers
             TopBar.transform.GetChild(8).GetComponent<TextMeshPro>().text = DT.ToString("hh:mm tt").ToUpper();
             LockScreen.transform.GetChild(2).GetComponent<TextMeshPro>().text = DT.ToString("hh:mm").ToUpper();
             LockScreen.transform.GetChild(3).GetComponent<TextMeshPro>().text = $"{DT:dddd}, {DT:dd}{dayending}, {DT:MMMM}";
-
         }
-
-
     }
 }

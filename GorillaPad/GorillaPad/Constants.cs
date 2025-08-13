@@ -18,7 +18,7 @@ namespace GorillaPad
         public const string BundlePath = "GorillaPad.Content.gp";
 
         // Static Transforms 
-
+        
         public static readonly TransformState AssetPosition = new(new Vector3(-68.4512f, 11.41f, -81.4067f), Quaternion.Euler(0, 10, 270), new Vector3(.1f, .1f, .1f));
 
         public static readonly TransformState SignPosition = new(new Vector3(-68.453f, 11.2156f, -81.4102f), Quaternion.Euler(0, 190, 90), new Vector3(.1f, .1f, .1f));

@@ -14,7 +14,7 @@ namespace GorillaPad.Interfaces
         private List<AppSystem> Apps = new();
         public static GameObject AppParent;
         private static string PFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        string GorillaPadAppFolder = Path.Combine(PFolder, "GorillaPadApps");
+        string GorillaPadAppFolder = Path.Combine(PFolder, "Apps");
 
         public void Start()
         {
