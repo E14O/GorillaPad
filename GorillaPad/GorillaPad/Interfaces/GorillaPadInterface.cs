@@ -1,4 +1,4 @@
-﻿using GorillaPad.Functions.Screens;
+﻿using GorillaPad.Functions.Managers;
 using GorillaPad.Functions.UI;
 using GorillaPad.Tools;
 using UnityEngine;
