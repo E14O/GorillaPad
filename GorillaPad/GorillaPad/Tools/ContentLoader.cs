@@ -38,8 +38,8 @@ namespace GorillaPad.Tools
             BundleParent.transform.localScale = Constants.AssetPosition.Scale;
 
             GameObject SignParent = Bundle.transform.Find("Sign").gameObject;
-            SignParent.transform.SetPositionAndRotation(Constants.SignPosition.Pos, Constants.SignPosition.Rot);
-            SignParent.transform.localScale = Constants.SignPosition.Scale;
+            SignParent.transform.SetPositionAndRotation(Constants.AssetPosition.Pos, Constants.AssetPosition.Rot);
+            SignParent.transform.localScale = Constants.AssetPosition.Scale;
         }
 
         public static void GetSounds(ref AudioSource PowerAudio, ref AudioSource ButtonAudio)
