@@ -1,14 +1,18 @@
 ﻿using GorillaPad.Functions.Managers;
 using GorillaPad.Interfaces;
 using GorillaPad.Tools;
+using Oculus.Platform.Models;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace GorillaPad.Functions
 {
     internal class Main : MonoBehaviour
     {
         public static Main instance;
+        public GameObject AppInterfaces;
+        private bool LastState = false;
 
         void Start()
         {
@@ -24,15 +28,19 @@ namespace GorillaPad.Functions
             ContentLoader.Bundle.AddComponent<ScreenManager>();
             ContentLoader.Bundle.AddComponent<GorillaPadInterface>();
             ContentLoader.BundleParent.AddComponent<HoldableEngine>();
+
+            AppInterfaces = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces").gameObject;
+            AppInterfaces.SetActive(true);
         }
+
 
         void Update()
         {
-            if (AppSystem.LastAppState && !AppSystem._AppOpen)
+            if (LastState && !AppSystem._AppOpen)
             {
-               AppSystem.OnAppClose();
+                AppSystem.OnAppClose();
             }
-            AppSystem.LastAppState = AppSystem._AppOpen;
+            LastState = AppSystem._AppOpen;
         }
     }
 }

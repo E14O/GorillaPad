@@ -1,4 +1,5 @@
-﻿using GorillaPad.Functions.Managers;
+﻿using GorillaPad.Functions;
+using GorillaPad.Functions.Managers;
 using GorillaPad.Tools;
 using UnityEngine;
 
@@ -19,10 +20,10 @@ namespace GorillaPad.Interfaces
         }
         public static void OnAppClose()
         {
-            // new model please put all the screens in a separate parent so i can just set them all to false when a app closes :)
-            var ScoreboardScreen = ContentLoader.BundleParent.transform.GetChild(2).GetChild(3).gameObject;
-            ScoreboardScreen.SetActive(false);
-            // ^ Will be changed to what said above code ^
+            foreach (Transform app in Main.instance.AppInterfaces.transform)
+            {
+                app.gameObject.SetActive(false);
+            }
         }
 
         public virtual void AppContent()

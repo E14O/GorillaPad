@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using GorillaPad.Functions.Apps;
 using GorillaPad.Functions.UI;
 using GorillaPad.Tools;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace GorillaPad.Interfaces
         {
             Directory.CreateDirectory(GorillaPadAppFolder);
 
-            AppParent = ContentLoader.BundleParent.transform.GetChild(2).GetChild(1).GetChild(3).gameObject;
+            AppParent = ContentLoader.BundleParent.transform.GetChild(1).GetChild(6).transform.Find("GridLayout").gameObject;
 
 
             var appTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(AppSystem)) && !t.IsAbstract);
@@ -30,6 +31,7 @@ namespace GorillaPad.Interfaces
                 Apps.Add((AppSystem)Activator.CreateInstance(type));
             }
             ApplicationCreation();
+            CreateDefualtApps();
         }
 
         public void ApplicationCreation()
@@ -49,6 +51,17 @@ namespace GorillaPad.Interfaces
             }
         }
 
+        public void CreateDefualtApps()
+        {
+            GameObject CreditsIcon = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1).transform.Find("CreditsIcon").gameObject;
+            GameObject SettingsIcon = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1).transform.Find("SettingsIcon").gameObject;
+
+            var CreditsAppSystem = Apps.FirstOrDefault(credsapp => credsapp is CreditsApp);
+            PadButton.Create(CreditsIcon, SelectedAudio.ButtonAudio, CreditsAppSystem.OnAppOpen);
+
+            var SettingsAppSystem = Apps.FirstOrDefault(settapp => settapp is SettingsApp);
+            PadButton.Create(SettingsIcon, SelectedAudio.ButtonAudio, SettingsAppSystem.OnAppOpen);
+        }
     }
 
 }

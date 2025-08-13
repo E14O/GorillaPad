@@ -10,6 +10,6 @@ namespace GorillaPad
     [BepInPlugin(Constants.GUID, Constants.Name, Constants.Version)]
     public class Plugin : BaseUnityPlugin
     {
-        void Start() => new GameObject(Constants.Name, typeof(Main), typeof(AppCreation), typeof(AppSystem));
+        void Start() => new GameObject(Constants.Name, typeof(Main), typeof(AppCreation));
     }
 }

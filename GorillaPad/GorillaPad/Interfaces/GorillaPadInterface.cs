@@ -12,10 +12,10 @@ namespace GorillaPad.Interfaces
 
         void Start()
         {
-            GameObject MainButton = ContentLoader.BundleParent.transform.GetChild(1).GetChild(7).gameObject;
-            GameObject PowerButton = ContentLoader.BundleParent.transform.GetChild(1).GetChild(3).gameObject;
-            GameObject VolUp = ContentLoader.BundleParent.transform.GetChild(1).GetChild(6).gameObject;
-            GameObject VolDown = ContentLoader.BundleParent.transform.GetChild(1).GetChild(5).gameObject;
+            GameObject MainButton = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("HomeButton").gameObject;
+            GameObject PowerButton = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("PowerButton").gameObject;
+            GameObject VolUp = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("Volume+").gameObject;
+            GameObject VolDown = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("Volume-").gameObject;
 
             PadButton.Create(MainButton, SelectedAudio.ButtonAudio, MainButtonFunction);
             PadButton.Create(VolUp, SelectedAudio.ButtonAudio, VolumeUpButtonFunction);

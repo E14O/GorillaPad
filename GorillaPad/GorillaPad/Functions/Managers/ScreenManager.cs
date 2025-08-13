@@ -2,6 +2,7 @@
 using GorillaPad.Tools;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GorillaPad.Functions.Managers
 {
@@ -11,20 +12,10 @@ namespace GorillaPad.Functions.Managers
 
         void Start()
         {
-            HomeScreen = ContentLoader.BundleParent.transform.GetChild(2).GetChild(1).gameObject;
-            LockScreen = ContentLoader.BundleParent.transform.GetChild(2).GetChild(0).gameObject;
-            TopBar = ContentLoader.BundleParent.transform.GetChild(0).gameObject;
-
-            SetupTopBar();
+            HomeScreen = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("HomeScreen").gameObject;
+            LockScreen = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("LockScreen").gameObject;
+            TopBar = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("Topbar").gameObject;
         }
-
-        void SetupTopBar()
-        {
-            TopBar.transform.GetChild(0).gameObject.SetActive(false);
-            TopBar.transform.GetChild(2).gameObject.SetActive(false);
-            TopBar.SetActive(false);
-        }
-
         void Update()
         {
             DateTime DT = DateTime.Now;
@@ -33,9 +24,9 @@ namespace GorillaPad.Functions.Managers
             else if (DT.Day == 2 || DT.Day == 22) dayending = "nd";
             else if (DT.Day == 3 || DT.Day == 23) dayending = "rd";
 
-            TopBar.transform.GetChild(8).GetComponent<TextMeshPro>().text = DT.ToString("hh:mm tt").ToUpper();
-            LockScreen.transform.GetChild(2).GetComponent<TextMeshPro>().text = DT.ToString("hh:mm").ToUpper();
-            LockScreen.transform.GetChild(3).GetComponent<TextMeshPro>().text = $"{DT:dddd}, {DT:dd}{dayending}, {DT:MMMM}";
+            TopBar.transform.Find("TBTime").GetComponent<Text>().text = DT.ToString("hh:mm tt").ToUpper();
+            LockScreen.transform.Find("Time Text").GetComponent<Text>().text = DT.ToString("hh:mm").ToUpper();
+            LockScreen.transform.Find("Date Text").GetComponent<Text>().text = $"{DT:dddd}, {DT:dd}{dayending}, {DT:MMMM}";
         }
     }
 }

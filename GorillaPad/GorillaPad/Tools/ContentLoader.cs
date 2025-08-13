@@ -33,12 +33,12 @@ namespace GorillaPad.Tools
 
         public static void BundlePositions()
         {
-            BundleParent = Bundle.transform.Find("GPParent").gameObject;
-            BundleParent.transform.SetLocalPositionAndRotation(Constants.AssetPosition.Pos, Constants.AssetPosition.Rot);
+            BundleParent = Bundle.transform.Find("Pad").gameObject;
+            BundleParent.transform.SetPositionAndRotation(Constants.AssetPosition.Pos, Constants.AssetPosition.Rot);
             BundleParent.transform.localScale = Constants.AssetPosition.Scale;
 
-            GameObject SignParent = Bundle.transform.Find("GPSignParent").gameObject;
-            SignParent.transform.SetLocalPositionAndRotation(Constants.SignPosition.Pos, Constants.SignPosition.Rot);
+            GameObject SignParent = Bundle.transform.Find("Sign").gameObject;
+            SignParent.transform.SetPositionAndRotation(Constants.SignPosition.Pos, Constants.SignPosition.Rot);
             SignParent.transform.localScale = Constants.SignPosition.Scale;
         }
 
@@ -46,8 +46,8 @@ namespace GorillaPad.Tools
         {
             try
             {
-                PowerAudio = Bundle.transform.GetChild(0).GetChild(3).gameObject.GetComponent<AudioSource>();
-                ButtonAudio = Bundle.transform.GetChild(0).GetChild(4).gameObject.GetComponent<AudioSource>();
+                PowerAudio = Bundle.transform.GetChild(0).GetChild(2).transform.Find("SecondaryButton").gameObject.GetComponent<AudioSource>();
+                ButtonAudio = Bundle.transform.GetChild(0).GetChild(2).transform.Find("PrimaryButton").gameObject.GetComponent<AudioSource>();
 
                 if (!SoundsLoaded)
                 {

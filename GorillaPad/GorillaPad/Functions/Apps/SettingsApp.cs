@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using GorillaPad.Interfaces;
+using GorillaPad.Tools;
+using UnityEngine;
 
 namespace GorillaPad.Functions.Apps
 {
@@ -14,11 +16,14 @@ namespace GorillaPad.Functions.Apps
         public override void OnAppOpen()
         {
             base.OnAppOpen();
+            AppContent();
         }
 
         public override void AppContent()
         {
             base.AppContent();
+            Transform settingsScreen = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces/SettingsApp");
+            settingsScreen.gameObject.SetActive(true);
         }
     }
 }
