@@ -1,4 +1,4 @@
-# GorillaPad
+# GorillaPad!
 GorillaPad is a GorillaTag Mod Made By E14O & H4RNS, past developers include Wryser, NotABird, Striker67, Ty, Cyn Who Helped Develop The Old Version Of GorillaPad.
 
 ## Q&A
