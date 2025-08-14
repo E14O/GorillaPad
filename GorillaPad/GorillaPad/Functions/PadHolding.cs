@@ -23,6 +23,7 @@ SOFTWARE.
 
 using GorillaLocomotion;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PadHolding : HoldableObject
 {
@@ -36,7 +37,7 @@ public class PadHolding : HoldableObject
     public float
         GrabDistance = 0.23f,
         ThrowForce = 1.75f;
-    public bool firstgrab = true;
+
     public virtual void OnGrab(bool isLeft)
     {
         transform.localScale = GorillaPad.Constants.RightHand.Scale;
@@ -137,4 +138,6 @@ public class PadHolding : HoldableObject
     {
 
     }
+
+
 }
