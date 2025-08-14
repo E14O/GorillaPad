@@ -13,7 +13,7 @@ namespace GorillaPad.Interfaces
     internal class AppCreation : MonoBehaviour
     {
         private readonly List<AppModule> Apps = new();
-        public static GameObject AppParent;
+        public static GameObject AppParent, ScreenParent;
         private readonly string FolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Apps");
 
         public void Start()
@@ -23,6 +23,7 @@ namespace GorillaPad.Interfaces
                 Directory.CreateDirectory(FolderPath);
             }
 
+            ScreenParent = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("AppInterfaces").gameObject;
             AppParent = ContentLoader.BundleParent.transform.GetChild(1).GetChild(6).transform.Find("GridLayout").gameObject;
 
             var appTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(AppModule)) && !t.IsAbstract);
@@ -43,20 +44,23 @@ namespace GorillaPad.Interfaces
             foreach (string appfile in AllApps)
             {
                 AssetBundle assetBundle = AssetBundle.LoadFromFile(appfile);
-                string prefabName = Path.GetFileNameWithoutExtension(appfile) + ".prefab";
-                GameObject CustomApp = Instantiate(assetBundle.LoadAsset<GameObject>(prefabName));
-                GameObject CustomAppIcon = CustomApp.transform.GetChild(0).gameObject;
-                GameObject CustomAppScreen = CustomApp.transform.GetChild(1).gameObject;
-                CustomAppIcon.transform.SetParent(AppParent.transform, false);
+                string prefab = Path.GetFileNameWithoutExtension(appfile);
 
-                // CustomAppScreen.transform.SetParent(Screens.transform, false);
-                // Also need to set the screen false. & disable all colliders
+                GameObject CustomApp = Instantiate(assetBundle.LoadAsset<GameObject>(prefab));
+                GameObject CustomAppIcon = CustomApp.transform.Find($"{prefab}Icon").gameObject;
+                GameObject CustomAppScreen = CustomApp.transform.Find($"{prefab}Screen").gameObject;
+                CustomAppScreen.SetActive(false);
+
+                CustomAppIcon.transform.SetParent(AppParent.transform, false);
+                CustomAppScreen.transform.SetParent(ScreenParent.transform, false);
+                Destroy(CustomApp);
             }
         }
 
         public void CreateDefaultApps()
         {
             Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
+
             var CreditsAppSystem = Apps.FirstOrDefault(creditsapp => creditsapp is CreditsApp);
             PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsAppSystem.OnAppOpen);
 

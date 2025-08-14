@@ -43,9 +43,9 @@ namespace GorillaPad.Functions
 
             Transform parent = ContentLoader.BundleParent.transform.GetChild(1);
             PadButton.Create(parent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);
-            PadButton.Create(parent, "PowerButton", SelectedAudio.ButtonAudio, TogglePower);
+            PadButton.Create(parent, "PowerButton", SelectedAudio.PowerAudio, TogglePower);
             PadButton.Create(parent, "Volume+", SelectedAudio.ButtonAudio, IncreaseVolume);
-            PadButton.Create(parent, "Volume-", SelectedAudio.PowerAudio, DecreaseVolume);
+            PadButton.Create(parent, "Volume-", SelectedAudio.ButtonAudio, DecreaseVolume);
         }
 
         void Update()
@@ -68,20 +68,22 @@ namespace GorillaPad.Functions
                 ScreenManager.LockScreen.SetActive(false);
                 ScreenManager.HomeScreen.SetActive(true);
                 IsUnlocked = true;
+                return;
             }
-            else if (IsUnlocked)
-            {
-                ScreenManager.LockScreen.SetActive(true);
-                ScreenManager.HomeScreen.SetActive(false);
-                IsUnlocked = false;
-            }
-            else
+
+            if (!IsUnlocked)
             {
                 ScreenManager.LockScreen.SetActive(false);
                 ScreenManager.HomeScreen.SetActive(true);
                 IsUnlocked = true;
+                return;
             }
+
+            ScreenManager.LockScreen.SetActive(true);
+            ScreenManager.HomeScreen.SetActive(false);
+            IsUnlocked = false;
         }
+
 
         void TogglePower()
         {
