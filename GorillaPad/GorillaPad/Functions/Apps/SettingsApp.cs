@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GorillaPad.Functions.Apps
 {
-    internal class SettingsApp : AppSystem
+    internal class SettingsApp : AppModule
     {
         // App That Cannot Be Removed.
         public override string AppName => "Settings";

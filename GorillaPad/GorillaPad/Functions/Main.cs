@@ -1,10 +1,10 @@
-﻿using GorillaPad.Functions.Managers;
+﻿using System;
+using GorillaPad.Functions.Managers;
+using GorillaPad.Functions.UI;
 using GorillaPad.Interfaces;
 using GorillaPad.Tools;
-using Oculus.Platform.Models;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace GorillaPad.Functions
 {
@@ -14,6 +14,9 @@ namespace GorillaPad.Functions
         public GameObject AppInterfaces;
         private bool LastState = false;
 
+        private bool IsUnlocked = false;
+        private bool SetPower = false;
+
         void Start()
         {
             instance = this;
@@ -22,25 +25,89 @@ namespace GorillaPad.Functions
 
         void Initialization()
         {
-            PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { Constants.CustomProp, Constants.Version } });
             ContentLoader.InitialiseContent();
-
+            try
+            {
+                PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { Constants.CustomProp, Constants.Version } });
+            }
+            catch (Exception e)
+            {
+                PadLogging.LogError($"Setting Custom Prop Was Interrupted {e}");
+                return;
+            }
             ContentLoader.Bundle.AddComponent<ScreenManager>();
-            ContentLoader.Bundle.AddComponent<GorillaPadInterface>();
             ContentLoader.BundleParent.AddComponent<HoldableEngine>();
 
             AppInterfaces = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces").gameObject;
             AppInterfaces.SetActive(true);
-        }
 
+            Transform parent = ContentLoader.BundleParent.transform.GetChild(1);
+            PadButton.Create(parent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);
+            PadButton.Create(parent, "PowerButton", SelectedAudio.ButtonAudio, TogglePower);
+            PadButton.Create(parent, "Volume+", SelectedAudio.ButtonAudio, IncreaseVolume);
+            PadButton.Create(parent, "Volume-", SelectedAudio.PowerAudio, DecreaseVolume);
+        }
 
         void Update()
         {
-            if (LastState && !AppSystem._AppOpen)
+            if (LastState && !AppModule.AppOpen)
             {
-                AppSystem.OnAppClose();
+                AppModule.OnAppClose();
             }
-            LastState = AppSystem._AppOpen;
+            LastState = AppModule.AppOpen;
+        }
+
+        void ToggleMainFunction()
+        {
+            if (!SetPower)
+                return;
+
+            if (AppModule.AppOpen)
+            {
+                AppModule.AppOpen = false;
+                ScreenManager.LockScreen.SetActive(false);
+                ScreenManager.HomeScreen.SetActive(true);
+                IsUnlocked = true;
+            }
+            else if (IsUnlocked)
+            {
+                ScreenManager.LockScreen.SetActive(true);
+                ScreenManager.HomeScreen.SetActive(false);
+                IsUnlocked = false;
+            }
+            else
+            {
+                ScreenManager.LockScreen.SetActive(false);
+                ScreenManager.HomeScreen.SetActive(true);
+                IsUnlocked = true;
+            }
+        }
+
+        void TogglePower()
+        {
+            if (SetPower)
+            {
+                ScreenManager.LockScreen.SetActive(false);
+                ScreenManager.HomeScreen.SetActive(false);
+                ScreenManager.TopBar.SetActive(false);
+                SetPower = false;
+            }
+            else
+            {
+                ScreenManager.LockScreen.SetActive(true);
+                ScreenManager.TopBar.SetActive(true);
+                SetPower = true;
+            }
+        }
+
+        void IncreaseVolume()
+        {
+
+        }
+
+        void DecreaseVolume()
+        {
+
         }
     }
 }

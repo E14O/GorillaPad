@@ -11,17 +11,25 @@ namespace GorillaPad.Functions.UI
 
         private SelectedAudio selectedSound;
 
-        public static PadButton Create(GameObject Object, SelectedAudio soundType, Action ExecuteFunction)
+        public static PadButton Create(Transform parent, string objectName, SelectedAudio soundType, Action executeFunction)
         {
-            PadButton PBScript = Object.GetComponent<PadButton>() ?? Object.AddComponent<PadButton>();
-            BoxCollider ObjectCollider = Object.GetComponent<BoxCollider>() ?? Object.AddComponent<BoxCollider>();
+            GameObject obj = parent.Find(objectName).gameObject;
+            if (obj == null)
+            {
+                PadLogging.LogError("Could Not Find");
+                return null;
+            }
 
-            ObjectCollider.isTrigger = true;
-            Object.layer = 18;
+            PadButton pbScript = obj.GetComponent<PadButton>() ?? obj.AddComponent<PadButton>();
+            BoxCollider objCollider = obj.GetComponent<BoxCollider>() ?? obj.AddComponent<BoxCollider>();
+            objCollider.isTrigger = true;
 
-            PBScript.OnButtonPress = ExecuteFunction;
-            PBScript.selectedSound = soundType;
-            return PBScript;
+            obj.layer = 18;
+
+            pbScript.OnButtonPress = executeFunction;
+            pbScript.selectedSound = soundType;
+
+            return pbScript;
         }
 
         public override void ButtonActivation()

@@ -12,31 +12,33 @@ namespace GorillaPad.Interfaces
 {
     internal class AppCreation : MonoBehaviour
     {
-        private List<AppSystem> Apps = new();
+        private readonly List<AppModule> Apps = new();
         public static GameObject AppParent;
-        private static string PFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        string GorillaPadAppFolder = Path.Combine(PFolder, "Apps");
+        private readonly string FolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Apps");
 
         public void Start()
         {
-            Directory.CreateDirectory(GorillaPadAppFolder);
+            if (!Directory.Exists(FolderPath))
+            {
+                Directory.CreateDirectory(FolderPath);
+            }
 
             AppParent = ContentLoader.BundleParent.transform.GetChild(1).GetChild(6).transform.Find("GridLayout").gameObject;
 
-
-            var appTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(AppSystem)) && !t.IsAbstract);
+            var appTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(AppModule)) && !t.IsAbstract);
 
             foreach (var type in appTypes)
             {
-                Apps.Add((AppSystem)Activator.CreateInstance(type));
+                Apps.Add((AppModule)Activator.CreateInstance(type));
             }
-            ApplicationCreation();
-            CreateDefualtApps();
+
+            CreateApplication();
+            CreateDefaultApps();
         }
 
-        public void ApplicationCreation()
+        public void CreateApplication()
         {
-            string[] AllApps = Directory.GetFiles(GorillaPadAppFolder, "*.app");
+            string[] AllApps = Directory.GetFiles(FolderPath, "*.app");
 
             foreach (string appfile in AllApps)
             {
@@ -46,21 +48,20 @@ namespace GorillaPad.Interfaces
                 GameObject CustomAppIcon = CustomApp.transform.GetChild(0).gameObject;
                 GameObject CustomAppScreen = CustomApp.transform.GetChild(1).gameObject;
                 CustomAppIcon.transform.SetParent(AppParent.transform, false);
+
                 // CustomAppScreen.transform.SetParent(Screens.transform, false);
                 // Also need to set the screen false. & disable all colliders
             }
         }
 
-        public void CreateDefualtApps()
+        public void CreateDefaultApps()
         {
-            GameObject CreditsIcon = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1).transform.Find("CreditsIcon").gameObject;
-            GameObject SettingsIcon = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1).transform.Find("SettingsIcon").gameObject;
-
-            var CreditsAppSystem = Apps.FirstOrDefault(credsapp => credsapp is CreditsApp);
-            PadButton.Create(CreditsIcon, SelectedAudio.ButtonAudio, CreditsAppSystem.OnAppOpen);
+            Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
+            var CreditsAppSystem = Apps.FirstOrDefault(creditsapp => creditsapp is CreditsApp);
+            PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsAppSystem.OnAppOpen);
 
             var SettingsAppSystem = Apps.FirstOrDefault(settapp => settapp is SettingsApp);
-            PadButton.Create(SettingsIcon, SelectedAudio.ButtonAudio, SettingsAppSystem.OnAppOpen);
+            PadButton.Create(parent, "SettingsIcon", SelectedAudio.ButtonAudio, SettingsAppSystem.OnAppOpen);
         }
     }
 

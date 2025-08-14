@@ -19,9 +19,9 @@ namespace GorillaPad
 
         // Static Transforms 
         
-        public static readonly TransformState AssetPosition = new(new Vector3(-68.4413f, 11.3857f, -81.3887f), Quaternion.Euler(0, 100, 0), new Vector3(.06f, .06f, .06f));
+        public static readonly TransformState Asset = new(new Vector3(-68.4413f, 11.3857f, -81.3887f), Quaternion.Euler(0, 100, 0), new Vector3(.06f, .06f, .06f));
 
-        public static readonly TransformState ChestPosition = new(new Vector3(-0.001f, 0.16f, 0.15f), Quaternion.Euler(89.6948f, 97.7934f, 98.5541f), new Vector3(0.15f, 0.15f, 0.15f));
+        public static readonly TransformState Chest = new(new Vector3(-0.001f, 0.16f, 0.15f), Quaternion.Euler(89.6948f, 97.7934f, 98.5541f), new Vector3(0.15f, 0.15f, 0.15f));
 
         // Hand Held Transforms
 

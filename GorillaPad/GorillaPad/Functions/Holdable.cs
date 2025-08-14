@@ -43,19 +43,19 @@ public class HoldableEngine : HoldableObject
 
         if (isLeft)
         {
-            transform.SetLocalPositionAndRotation(GorillaPad.Constants.LeftHand.Pos, GorillaPad.Constants.LeftHand.Rot);
+            transform.SetLocalPositionAndRotation(GorillaPad.Constants.LeftHand.Position, GorillaPad.Constants.LeftHand.Rotation);
         }
         else
         {
-            transform.SetLocalPositionAndRotation(GorillaPad.Constants.RightHand.Pos, GorillaPad.Constants.RightHand.Rot);
+            transform.SetLocalPositionAndRotation(GorillaPad.Constants.RightHand.Position, GorillaPad.Constants.RightHand.Rotation);
         }
     }
 
     public virtual void OnDrop(bool isLeft)
     {
         transform.parent = VRRig.LocalRig.headMesh.transform.parent;
-        transform.SetLocalPositionAndRotation(GorillaPad.Constants.ChestPosition.Pos, GorillaPad.Constants.ChestPosition.Rot);
-        transform.localScale = GorillaPad.Constants.ChestPosition.Scale;
+        transform.SetLocalPositionAndRotation(GorillaPad.Constants.Chest.Position, GorillaPad.Constants.Chest.Rotation);
+        transform.localScale = GorillaPad.Constants.Chest.Scale;
     }
 
     public void Update()

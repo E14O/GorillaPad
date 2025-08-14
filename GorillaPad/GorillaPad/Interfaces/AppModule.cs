@@ -5,18 +5,18 @@ using UnityEngine;
 
 namespace GorillaPad.Interfaces
 {
-    public abstract class AppSystem
+    public abstract class AppModule
     {
         public abstract string AppName { get; }
         public abstract string AppVersion { get; }
 
-        public static bool _AppOpen = false;
+        public static bool AppOpen = false;
         public static bool LastAppState = false;
 
         public virtual void OnAppOpen()
         {
             ScreenManager.HomeScreen.SetActive(false);
-            _AppOpen = true;
+            AppOpen = true;
         }
         public static void OnAppClose()
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 namespace GorillaPad.Tools
@@ -34,12 +35,12 @@ namespace GorillaPad.Tools
         public static void BundlePositions()
         {
             BundleParent = Bundle.transform.Find("Pad").gameObject;
-            BundleParent.transform.SetPositionAndRotation(Constants.AssetPosition.Pos, Constants.AssetPosition.Rot);
-            BundleParent.transform.localScale = Constants.AssetPosition.Scale;
+            BundleParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
+            BundleParent.transform.localScale = Constants.Asset.Scale;
 
             GameObject SignParent = Bundle.transform.Find("Sign").gameObject;
-            SignParent.transform.SetPositionAndRotation(Constants.AssetPosition.Pos, Constants.AssetPosition.Rot);
-            SignParent.transform.localScale = Constants.AssetPosition.Scale;
+            SignParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
+            SignParent.transform.localScale = Constants.Asset.Scale;
         }
 
         public static void GetSounds(ref AudioSource PowerAudio, ref AudioSource ButtonAudio)
@@ -62,11 +63,9 @@ namespace GorillaPad.Tools
             }
         }
 
-
         private static AssetBundle InitialiseBundle(string path)
         {
-            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(path);
-            return AssetBundle.LoadFromStream(stream);
+            return AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(path));
         }
     }
 }

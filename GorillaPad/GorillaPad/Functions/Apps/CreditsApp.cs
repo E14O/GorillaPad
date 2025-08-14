@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GorillaPad.Functions.Apps
 {
-    internal class CreditsApp : AppSystem
+    internal class CreditsApp : AppModule
     {
         // App That Cannot Be Removed.
         public override string AppName => "Credits";
