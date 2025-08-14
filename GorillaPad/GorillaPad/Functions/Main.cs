@@ -11,7 +11,7 @@ namespace GorillaPad.Functions
     internal class Main : MonoBehaviour
     {
         public static Main instance;
-        public GameObject AppInterfaces;
+        public GameObject AppInterfaces, PadColour;
         private bool LastState = false;
 
         private bool IsUnlocked = false;
@@ -39,6 +39,7 @@ namespace GorillaPad.Functions
             ContentLoader.BundleParent.AddComponent<PadHolding>();
 
             AppInterfaces = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces").gameObject;
+            PadColour = ContentLoader.Bundle.transform.Find("Pad/Model").gameObject;
 
             Transform parent = ContentLoader.BundleParent.transform.GetChild(1);
             PadButton.Create(parent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);
@@ -54,6 +55,11 @@ namespace GorillaPad.Functions
                 AppModule.OnAppClose();
             }
             LastState = AppModule.AppOpen;
+
+            if (GorillaTagger.Instance.offlineVRRig != null)
+            {
+                PadColour.GetComponent<MeshRenderer>().material.color = GorillaTagger.Instance.offlineVRRig.playerColor;
+            }
         }
 
         void ToggleMainFunction()
