@@ -38,6 +38,8 @@ namespace GorillaPad.Functions
             ContentLoader.Bundle.AddComponent<ScreenManager>();
             ContentLoader.BundleParent.AddComponent<PadHolding>();
 
+            AppInterfaces = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces").gameObject;
+
             Transform parent = ContentLoader.BundleParent.transform.GetChild(1);
             PadButton.Create(parent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);
             PadButton.Create(parent, "PowerButton", SelectedAudio.PowerAudio, TogglePower);
