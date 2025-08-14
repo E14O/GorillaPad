@@ -11,6 +11,8 @@ namespace GorillaPad.Functions.UI
 
         private SelectedAudio selectedSound;
 
+        //  private GorillaTriggerColliderHandIndicator lastHandComponent;
+
         public static PadButton Create(Transform parent, string objectName, SelectedAudio soundType, Action executeFunction)
         {
             GameObject obj = parent.Find(objectName).gameObject;
@@ -32,10 +34,24 @@ namespace GorillaPad.Functions.UI
             return pbScript;
         }
 
+        /* private new void OnTriggerEnter(Collider other)
+         {
+             GorillaTriggerColliderHandIndicator hand = other.GetComponent<GorillaTriggerColliderHandIndicator>();
+             if (hand != null)
+             {
+                 lastHandComponent = hand;
+             }
+         }*/
+
         public override void ButtonActivation()
         {
             base.ButtonActivation();
             pressButtonSoundIndex = 0;
+
+            /*  if (lastHandComponent != null)
+              {
+                  GorillaTagger.Instance.offlineVRRig.PlayHandTapLocal(67, lastHandComponent.isLeftHand, 0f);
+              }*/
 
             AudioSource powerAudio = null;
             AudioSource buttonAudio = null;

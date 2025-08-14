@@ -16,8 +16,11 @@ namespace GorillaPad.Interfaces
         public virtual void OnAppOpen()
         {
             ScreenManager.HomeScreen.SetActive(false);
+            ContentLoader.BundleParent.transform.Find($"Canvas/AppInterfaces/{AppName}App").gameObject.SetActive(true);
+
             AppOpen = true;
         }
+
         public static void OnAppClose()
         {
             foreach (Transform app in Main.instance.AppInterfaces.transform)

@@ -24,7 +24,7 @@ SOFTWARE.
 using GorillaLocomotion;
 using UnityEngine;
 
-public class HoldableEngine : HoldableObject
+public class PadHolding : HoldableObject
 {
     public bool
         InHand = false,

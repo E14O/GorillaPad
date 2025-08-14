@@ -22,8 +22,6 @@ namespace GorillaPad.Functions.Apps
         public override void AppContent()
         {
             base.AppContent();
-            Transform settingsScreen = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces/SettingsApp");
-            settingsScreen.gameObject.SetActive(true);
         }
     }
 }

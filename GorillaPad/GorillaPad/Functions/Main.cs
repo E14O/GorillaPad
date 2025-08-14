@@ -36,10 +36,7 @@ namespace GorillaPad.Functions
                 return;
             }
             ContentLoader.Bundle.AddComponent<ScreenManager>();
-            ContentLoader.BundleParent.AddComponent<HoldableEngine>();
-
-            AppInterfaces = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces").gameObject;
-            AppInterfaces.SetActive(true);
+            ContentLoader.BundleParent.AddComponent<PadHolding>();
 
             Transform parent = ContentLoader.BundleParent.transform.GetChild(1);
             PadButton.Create(parent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);
@@ -84,7 +81,6 @@ namespace GorillaPad.Functions
             IsUnlocked = false;
         }
 
-
         void TogglePower()
         {
             if (SetPower)
@@ -92,6 +88,13 @@ namespace GorillaPad.Functions
                 ScreenManager.LockScreen.SetActive(false);
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.TopBar.SetActive(false);
+
+                IsUnlocked = false;
+                foreach (Transform app in Main.instance.AppInterfaces.transform)
+                {
+                    app.gameObject.SetActive(false);
+                }
+
                 SetPower = false;
             }
             else
