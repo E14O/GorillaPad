@@ -5,7 +5,7 @@ namespace GorillaPad
 {
     internal class Constants
     {
-        public const string GUID = "e14o.h4rns.gorillapad";
+        public const string GUID = "e14o.h4rns.spankypluh.gorillapad";
 
         public const string Name = "GorillaPad";
 
