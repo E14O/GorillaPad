@@ -41,13 +41,22 @@ public class PadHolding : HoldableObject
         GrabDistance = 0.23f,
         ThrowForce = 1.75f;
 
+    public float InterpolationTime { get; set; }
+    public Vector3 GrabPosition { get; set; }
+    public Quaternion GrabQuaternion { get; set; }
+    public Vector3 GrabScale { get; set; }
+
     public virtual void OnGrab(bool isLeft)
     {
+        InterpolationTime = 0f;
+        GrabPosition = transform.localPosition;
+        GrabQuaternion = transform.localRotation;
+        GrabScale = transform.localScale;
+
         transform.localScale = GorillaPad.Constants.RightHand.Scale;
 
         if (isLeft)
         {
-            transform.SetLocalPositionAndRotation(GorillaPad.Constants.LeftHand.Position, GorillaPad.Constants.LeftHand.Rotation);
             Hashtable hash = new Hashtable();
 
             ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
@@ -56,7 +65,6 @@ public class PadHolding : HoldableObject
         }
         else
         {
-            transform.SetLocalPositionAndRotation(GorillaPad.Constants.RightHand.Position, GorillaPad.Constants.RightHand.Rotation);
             Hashtable hash = new Hashtable();
 
             ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
@@ -67,8 +75,13 @@ public class PadHolding : HoldableObject
 
     public virtual void OnDrop(bool isLeft)
     {
+        InterpolationTime = 0f;
+        GrabPosition = transform.localPosition;
+        GrabQuaternion = transform.localRotation;
+        GrabScale = transform.localScale;
+
         transform.parent = VRRig.LocalRig.headMesh.transform.parent;
-        transform.SetLocalPositionAndRotation(GorillaPad.Constants.Chest.Position, GorillaPad.Constants.Chest.Rotation);
+        
         transform.localScale = GorillaPad.Constants.Chest.Scale;
 
         Hashtable hash = new Hashtable();
@@ -139,6 +152,36 @@ public class PadHolding : HoldableObject
 
             EquipmentInteractor.instance.rightHandHeldEquipment = null;
             OnDrop(false);
+        }
+
+        HandleSmoothInterpolation();
+    }
+
+    private void HandleSmoothInterpolation()
+    {
+        if (InHand)
+        {
+            Vector3 targetPosition = InLeftHand ? GorillaPad.Constants.LeftHand.Position : GorillaPad.Constants.RightHand.Position;
+            Quaternion targetRotation = InLeftHand ? GorillaPad.Constants.LeftHand.Rotation : GorillaPad.Constants.RightHand.Rotation;
+            Vector3 targetScale = InLeftHand ? GorillaPad.Constants.LeftHand.Scale : GorillaPad.Constants.RightHand.Scale;
+
+            transform.localPosition = Vector3.Lerp(GrabPosition, targetPosition, InterpolationTime);
+            transform.localRotation = Quaternion.Lerp(GrabQuaternion, targetRotation, InterpolationTime);
+            transform.localScale = Vector3.Lerp(GrabScale, targetScale, InterpolationTime);
+
+            InterpolationTime += Time.deltaTime * 5f;
+        }
+        else
+        {
+            Vector3 targetPosition = GorillaPad.Constants.Chest.Position;
+            Quaternion targetRotation = GorillaPad.Constants.Chest.Rotation;
+            Vector3 targetScale = GorillaPad.Constants.Chest.Scale;
+
+            transform.localPosition = Vector3.Lerp(GrabPosition, targetPosition, InterpolationTime);
+            transform.localRotation = Quaternion.Lerp(GrabQuaternion, targetRotation, InterpolationTime);
+            transform.localScale = Vector3.Lerp(GrabScale, targetScale, InterpolationTime);
+
+            InterpolationTime += Time.deltaTime * 5f;
         }
     }
 

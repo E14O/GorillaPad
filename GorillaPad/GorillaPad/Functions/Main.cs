@@ -83,6 +83,8 @@ namespace GorillaPad.Functions
             {
                 UpdateScreenTransition();
             }
+
+            AppModule.UpdateAppAnimation();
         }
 
         void ToggleMainFunction()
