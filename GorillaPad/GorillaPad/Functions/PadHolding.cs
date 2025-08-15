@@ -22,8 +22,11 @@ SOFTWARE.
 */
 
 using GorillaLocomotion;
+using GorillaNetworking;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ExitGames.Client.Photon;
 
 public class PadHolding : HoldableObject
 {
@@ -45,10 +48,20 @@ public class PadHolding : HoldableObject
         if (isLeft)
         {
             transform.SetLocalPositionAndRotation(GorillaPad.Constants.LeftHand.Position, GorillaPad.Constants.LeftHand.Rotation);
+            Hashtable hash = new Hashtable();
+
+            ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
+            ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", true);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
         }
         else
         {
             transform.SetLocalPositionAndRotation(GorillaPad.Constants.RightHand.Position, GorillaPad.Constants.RightHand.Rotation);
+            Hashtable hash = new Hashtable();
+
+            ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
+            ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", false);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
         }
     }
 
@@ -57,6 +70,10 @@ public class PadHolding : HoldableObject
         transform.parent = VRRig.LocalRig.headMesh.transform.parent;
         transform.SetLocalPositionAndRotation(GorillaPad.Constants.Chest.Position, GorillaPad.Constants.Chest.Rotation);
         transform.localScale = GorillaPad.Constants.Chest.Scale;
+
+        Hashtable hash = new Hashtable();
+        ExtensionMethods.AddOrUpdate(hash, "GPHolding", false);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
     }
 
     public void Update()

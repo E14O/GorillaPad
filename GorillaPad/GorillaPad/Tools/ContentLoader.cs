@@ -7,8 +7,7 @@ namespace GorillaPad.Tools
     internal class ContentLoader : MonoBehaviour
     {
         public static ContentLoader Instance { get; private set; }
-        public static GameObject Bundle;
-        public static GameObject BundleParent;
+        public static GameObject Bundle, BundleParent, NetworkedPad;
 
         private static bool SoundsLoaded = false;
 
@@ -40,6 +39,15 @@ namespace GorillaPad.Tools
             GameObject SignParent = Bundle.transform.Find("Sign").gameObject;
             SignParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
             SignParent.transform.localScale = Constants.Asset.Scale;
+
+            CreateNetworkedClone();
+        }
+
+        static void CreateNetworkedClone()
+        {
+            NetworkedPad = Instantiate(BundleParent);
+            NetworkedPad.name = Constants.NetworkName;
+            NetworkedPad.transform.SetPositionAndRotation(new Vector3(0,0,0), Quaternion.Euler(0,0,0));
         }
 
         public static void GetSounds(ref AudioSource PowerAudio, ref AudioSource ButtonAudio)
