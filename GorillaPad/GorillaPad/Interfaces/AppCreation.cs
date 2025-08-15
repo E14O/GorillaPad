@@ -48,10 +48,13 @@ namespace GorillaPad.Interfaces
 
                 GameObject CustomApp = Instantiate(assetBundle.LoadAsset<GameObject>(prefab));
                 GameObject CustomAppIcon = CustomApp.transform.Find($"{prefab}Icon").gameObject;
-                GameObject CustomAppScreen = CustomApp.transform.Find($"{prefab}Screen").gameObject;
+                GameObject CustomAppScreen = CustomApp.transform.Find($"{prefab}App").gameObject;
                 CustomAppScreen.SetActive(false);
 
                 CustomAppIcon.transform.SetParent(AppParent.transform, false);
+                CustomAppIcon.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                CustomAppIcon.GetComponent<RectTransform>().localScale = new Vector3(0.9919f, 0.9919f, 0.9919f);
+
                 CustomAppScreen.transform.SetParent(ScreenParent.transform, false);
                 Destroy(CustomApp);
             }
