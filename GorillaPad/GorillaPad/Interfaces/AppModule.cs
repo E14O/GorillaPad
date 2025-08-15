@@ -17,7 +17,6 @@ namespace GorillaPad.Interfaces
         {
             ScreenManager.HomeScreen.SetActive(false);
             ContentLoader.BundleParent.transform.Find($"Canvas/AppInterfaces/{AppName}App").gameObject.SetActive(true);
-
             AppOpen = true;
         }
 

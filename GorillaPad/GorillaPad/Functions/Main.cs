@@ -93,9 +93,9 @@ namespace GorillaPad.Functions
             if (AppModule.AppOpen)
             {
                 AppModule.AppOpen = false;
-                ScreenManager.LockScreen.SetActive(true);
-                ScreenManager.HomeScreen.SetActive(false);
-                IsUnlocked = false;
+                ScreenManager.LockScreen.SetActive(false);
+                ScreenManager.HomeScreen.SetActive(true);
+                IsUnlocked = true;
                 return;
             }
 
@@ -106,10 +106,10 @@ namespace GorillaPad.Functions
                 return;
             }
 
-            ScreenManager.LockScreen.SetActive(true);
-            ScreenManager.HomeScreen.SetActive(false);
+            StartScreenTransition(false); 
             IsUnlocked = false;
         }
+
 
         void TogglePower()
         {
