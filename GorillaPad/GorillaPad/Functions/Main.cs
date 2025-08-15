@@ -44,7 +44,7 @@ namespace GorillaPad.Functions
             }
             catch (Exception e)
             {
-                PadLogging.LogError($"Setting Custom Prop Was Interrupted {e}");
+                PadLogging.LogError($" While Setting The Custom Prop It Was Interrupted {e}");
                 return;
             }
             ContentLoader.Bundle.AddComponent<ScreenManager>();
@@ -109,7 +109,6 @@ namespace GorillaPad.Functions
             StartScreenTransition(false); 
             IsUnlocked = false;
         }
-
 
         void TogglePower()
         {

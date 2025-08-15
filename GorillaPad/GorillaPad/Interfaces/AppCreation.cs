@@ -39,24 +39,39 @@ namespace GorillaPad.Interfaces
 
         public void CreateApplication()
         {
-            string[] AllApps = Directory.GetFiles(FolderPath, "*.app");
+            string[] AppPath = Directory.GetFiles(FolderPath, "*.app");
+            string[] DllPath = Directory.GetFiles(FolderPath, "*.dll");
 
-            foreach (string appfile in AllApps)
+            foreach (string App in AppPath)
             {
-                AssetBundle assetBundle = AssetBundle.LoadFromFile(appfile);
-                string prefab = Path.GetFileNameWithoutExtension(appfile);
+                AssetBundle assetBundle = AssetBundle.LoadFromFile(App);
+                string Bundle = Path.GetFileNameWithoutExtension(App);
 
-                GameObject CustomApp = Instantiate(assetBundle.LoadAsset<GameObject>(prefab));
-                GameObject CustomAppIcon = CustomApp.transform.Find($"{prefab}Icon").gameObject;
-                GameObject CustomAppScreen = CustomApp.transform.Find($"{prefab}App").gameObject;
-                CustomAppScreen.SetActive(false);
+                GameObject CustomApp = Instantiate(assetBundle.LoadAsset<GameObject>(Bundle));
+                GameObject AppIcon = CustomApp.transform.Find($"{Bundle}Icon").gameObject;
+                GameObject AppScreen = CustomApp.transform.Find($"{Bundle}App").gameObject;
+                AppScreen.SetActive(false);
 
-                CustomAppIcon.transform.SetParent(AppParent.transform, false);
-                CustomAppIcon.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                CustomAppIcon.GetComponent<RectTransform>().localScale = new Vector3(0.9919f, 0.9919f, 0.9919f);
+                AppIcon.transform.SetParent(AppParent.transform, false);
+                AppIcon.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                AppIcon.GetComponent<RectTransform>().localScale = new Vector3(0.9919f, 0.9919f, 0.9919f);
 
-                CustomAppScreen.transform.SetParent(ScreenParent.transform, false);
+                AppScreen.transform.SetParent(ScreenParent.transform, false);
                 Destroy(CustomApp);
+            }
+
+            foreach (string Dll in DllPath)
+            {
+                var GetApp = Assembly.LoadFile(Dll).GetTypes().Where(t => t.IsSubclassOf(typeof(AppModule)) && !t.IsAbstract);
+
+                foreach (var type in GetApp)
+                {
+                    var App = (AppModule)Activator.CreateInstance(type);
+                    Apps.Add(App);
+
+                    Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
+                    PadButton.Create(parent, $"{App.AppName}Icon", SelectedAudio.ButtonAudio, App.OnAppOpen);
+                }
             }
         }
 
