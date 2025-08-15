@@ -46,7 +46,6 @@ namespace GorillaPad.Tools
         {
             try
             {
-                PadLogging.LogMessage("Attempting Loaded AudioSources..");
                 PowerAudio = Bundle.transform.GetChild(0).GetChild(2).transform.Find("SecondaryButton").gameObject.GetComponent<AudioSource>();
                 ButtonAudio = Bundle.transform.GetChild(0).GetChild(2).transform.Find("PrimaryButton").gameObject.GetComponent<AudioSource>();
 
