@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GorillaPad.Functions.UI;
 using GorillaPad.Interfaces;
 using GorillaPad.Tools;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GorillaPad.Functions.Apps
 {
@@ -12,6 +11,10 @@ namespace GorillaPad.Functions.Apps
         // App That Cannot Be Removed.
         public override string AppName => "Credits";
         public override string AppVersion => "0.0.1";
+
+        private int _currentPage;
+        private GameObject _pageOneObj;
+        private GameObject _pageTwoObj;
 
         public override void OnAppOpen()
         {
@@ -22,6 +25,31 @@ namespace GorillaPad.Functions.Apps
         public override void AppContent()
         {
             base.AppContent();
+
+            _pageOneObj = ContentLoader.BundleParent.transform.GetChild(1).GetChild(7).transform.Find($"{AppName}App/PageOne").gameObject;
+            _pageTwoObj = ContentLoader.BundleParent.transform.GetChild(1).GetChild(7).transform.Find($"{AppName}App/PageTwo").gameObject;
+            _currentPage = 0;
+
+            RefreshCreditsPage();
+
+            Transform parent = ContentLoader.BundleParent.transform.GetChild(1).GetChild(7).transform.Find($"{AppName}App");
+            PadButton.Create(parent, "Background", SelectedAudio.ButtonAudio, ButtonClicked);
+        }
+
+        public void ButtonClicked()
+        {
+            _currentPage = (_currentPage == 0) ? 1 : 0;
+            RefreshCreditsPage();
+        }
+
+        private void RefreshCreditsPage()
+        {
+            if (_pageOneObj != null && _pageTwoObj != null)
+            {
+                _pageOneObj.SetActive(_currentPage == 0);
+                _pageTwoObj.SetActive(_currentPage == 1);
+            }
         }
     }
 }
+

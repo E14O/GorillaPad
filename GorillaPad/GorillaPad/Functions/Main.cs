@@ -58,7 +58,6 @@ namespace GorillaPad.Functions
             PadButton.Create(parent, "PowerButton", SelectedAudio.PowerAudio, TogglePower);
             PadButton.Create(parent, "Volume+", SelectedAudio.ButtonAudio, IncreaseVolume);
             PadButton.Create(parent, "Volume-", SelectedAudio.ButtonAudio, DecreaseVolume);
-
         }
 
         void Update()
