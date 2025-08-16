@@ -18,14 +18,13 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE.*/
 
+using ExitGames.Client.Photon;
 using GorillaLocomotion;
 using GorillaNetworking;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using ExitGames.Client.Photon;
 
 public class PadHolding : HoldableObject
 {
@@ -40,18 +39,8 @@ public class PadHolding : HoldableObject
         GrabDistance = 0.23f,
         ThrowForce = 1.75f;
 
-    public float InterpolationTime { get; set; }
-    public Vector3 GrabPosition { get; set; }
-    public Quaternion GrabQuaternion { get; set; }
-    public Vector3 GrabScale { get; set; }
-
     public virtual void OnGrab(bool isLeft)
     {
-        InterpolationTime = 0f;
-        GrabPosition = transform.localPosition;
-        GrabQuaternion = transform.localRotation;
-        GrabScale = transform.localScale;
-
         transform.localScale = GorillaPad.Constants.RightHand.Scale;
 
         if (isLeft)
@@ -61,6 +50,8 @@ public class PadHolding : HoldableObject
             ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
             ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", true);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
+
+            transform.SetLocalPositionAndRotation(GorillaPad.Constants.LeftHand.Position, GorillaPad.Constants.LeftHand.Rotation);
         }
         else
         {
@@ -69,18 +60,15 @@ public class PadHolding : HoldableObject
             ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
             ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", false);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
+
+            transform.SetLocalPositionAndRotation(GorillaPad.Constants.RightHand.Position, GorillaPad.Constants.RightHand.Rotation);
         }
     }
 
     public virtual void OnDrop(bool isLeft)
     {
-        InterpolationTime = 0f;
-        GrabPosition = transform.localPosition;
-        GrabQuaternion = transform.localRotation;
-        GrabScale = transform.localScale;
-
         transform.parent = VRRig.LocalRig.headMesh.transform.parent;
-        
+
         transform.localScale = GorillaPad.Constants.Chest.Scale;
 
         Hashtable hash = new Hashtable();
@@ -152,36 +140,6 @@ public class PadHolding : HoldableObject
             EquipmentInteractor.instance.rightHandHeldEquipment = null;
             OnDrop(false);
         }
-
-        HandleSmoothInterpolation();
-    }
-
-    private void HandleSmoothInterpolation()
-    {
-        if (InHand)
-        {
-            Vector3 targetPosition = InLeftHand ? GorillaPad.Constants.LeftHand.Position : GorillaPad.Constants.RightHand.Position;
-            Quaternion targetRotation = InLeftHand ? GorillaPad.Constants.LeftHand.Rotation : GorillaPad.Constants.RightHand.Rotation;
-            Vector3 targetScale = InLeftHand ? GorillaPad.Constants.LeftHand.Scale : GorillaPad.Constants.RightHand.Scale;
-
-            transform.localPosition = Vector3.Lerp(GrabPosition, targetPosition, InterpolationTime);
-            transform.localRotation = Quaternion.Lerp(GrabQuaternion, targetRotation, InterpolationTime);
-            transform.localScale = Vector3.Lerp(GrabScale, targetScale, InterpolationTime);
-
-            InterpolationTime += Time.deltaTime * 5f;
-        }
-        else
-        {
-            Vector3 targetPosition = GorillaPad.Constants.Chest.Position;
-            Quaternion targetRotation = GorillaPad.Constants.Chest.Rotation;
-            Vector3 targetScale = GorillaPad.Constants.Chest.Scale;
-
-            transform.localPosition = Vector3.Lerp(GrabPosition, targetPosition, InterpolationTime);
-            transform.localRotation = Quaternion.Lerp(GrabQuaternion, targetRotation, InterpolationTime);
-            transform.localScale = Vector3.Lerp(GrabScale, targetScale, InterpolationTime);
-
-            InterpolationTime += Time.deltaTime * 5f;
-        }
     }
 
     public override void OnHover(InteractionPoint pointHovered, GameObject hoveringHand)
@@ -197,6 +155,4 @@ public class PadHolding : HoldableObject
     {
 
     }
-
-
-} */
+}
