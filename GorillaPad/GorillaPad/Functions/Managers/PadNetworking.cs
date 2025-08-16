@@ -39,6 +39,8 @@ namespace GorillaPad.Functions.Managers
             var GPlayerName = _Player.NickName;
             VRRig GPRig = GorillaGameManager.StaticFindRigForPlayer(_Player);
             GameObject PadToGive = Instantiate(ContentLoader.NetworkedPad);
+            PadToGive.SetActive(true);
+            PadToGive.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
             PadToGive.name = $"{GPlayerName}`s Pad";
 
             bool HoldingGP = !(bool)_Player.CustomProperties["GPHolding"];
