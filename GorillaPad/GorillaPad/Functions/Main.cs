@@ -83,7 +83,7 @@ namespace GorillaPad.Functions
                 UpdateScreenTransition();
             }
 
-            AppModule.UpdateAppAnimation();
+			AppModule.UpdateAppAnimation();
         }
 
         void ToggleMainFunction()
@@ -220,7 +220,7 @@ namespace GorillaPad.Functions
 			}
 		}
 
-		void StartScreenTransition(bool toHome)
+		public void StartScreenTransition(bool toHome)
 		{
 			if (lockScreenCanvasGroup == null && ScreenManager.LockScreen != null)
 			{
