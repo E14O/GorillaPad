@@ -48,7 +48,7 @@ namespace GorillaPad.Functions
                 return;
             }
             ContentLoader.Bundle.AddComponent<ScreenManager>();
-            ContentLoader.BundleParent.AddComponent<PadHolding>();
+            // ContentLoader.BundleParent.AddComponent<PadHolding>();
 
             AppInterfaces = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces").gameObject;
             PadColour = ContentLoader.Bundle.transform.Find("Pad/Model").gameObject;

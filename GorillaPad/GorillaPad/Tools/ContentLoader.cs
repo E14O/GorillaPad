@@ -40,22 +40,17 @@ namespace GorillaPad.Tools
             SignParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
             SignParent.transform.localScale = Constants.Asset.Scale;
 
-            CreateNetworkedClone();
-        }
-
-        static void CreateNetworkedClone()
-        {
             NetworkedPad = Instantiate(BundleParent);
             NetworkedPad.name = Constants.NetworkName;
-            NetworkedPad.transform.SetPositionAndRotation(new Vector3(0,0,0), Quaternion.Euler(0,0,0));
+            NetworkedPad.SetActive(false);
         }
 
         public static void GetSounds(ref AudioSource PowerAudio, ref AudioSource ButtonAudio)
         {
             try
             {
-                PowerAudio = Bundle.transform.GetChild(0).GetChild(2).transform.Find("SecondaryButton").gameObject.GetComponent<AudioSource>();
-                ButtonAudio = Bundle.transform.GetChild(0).GetChild(2).transform.Find("PrimaryButton").gameObject.GetComponent<AudioSource>();
+                PowerAudio = BundleParent.transform.GetChild(2).transform.Find("SecondaryButton").gameObject.GetComponent<AudioSource>();
+                ButtonAudio = BundleParent.transform.GetChild(2).transform.Find("PrimaryButton").gameObject.GetComponent<AudioSource>();
 
                 if (!SoundsLoaded)
                 {
