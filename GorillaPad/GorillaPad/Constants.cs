@@ -28,8 +28,8 @@ namespace GorillaPad
 
         // Hand Held Transforms
 
-        public static readonly TransformState LeftHand = new(new Vector3(-0.14f, 0.06f, 0.05f), Quaternion.Euler(9.5455f, 180.8367f, 175.2001f), new Vector3(0.15f, 0.15f, 0.15f));
+        public static readonly TransformState LeftHand = new(new Vector3(-0.14f, 0.06f, 0.05f), Quaternion.Euler(9.5455f, 180.8367f, 175.2001f), new Vector3(.06f, .06f, .06f));
 
-        public static readonly TransformState RightHand = new(new Vector3(0.14f, 0.04f, 0.05f), Quaternion.Euler(4.9056f, 176.9048f, 193.4551f), new Vector3(0.15f, 0.15f, 0.15f));
+        public static readonly TransformState RightHand = new(new Vector3(0.14f, 0.04f, 0.05f), Quaternion.Euler(4.9056f, 176.9048f, 193.4551f), new Vector3(.06f, .06f, .06f));
     }
 }

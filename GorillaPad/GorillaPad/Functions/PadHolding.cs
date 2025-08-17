@@ -1,26 +1,4 @@
-﻿/* MIT License
-
-Copyright (c) 2023 dev9998
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.*/
-
-using ExitGames.Client.Photon;
+﻿using ExitGames.Client.Photon;
 using GorillaLocomotion;
 using GorillaNetworking;
 using Photon.Pun;
@@ -28,25 +6,30 @@ using UnityEngine;
 
 public class PadHolding : HoldableObject
 {
-    public bool
-        InHand = false,
-        InLeftHand = false,
-        PickUp = true,
-        DidSwap = false,
-        SwappedLeft = true;
+    public bool InHand = false, InLeftHand = false, PickUp = true, DidSwap = false, SwappedLeft = true;
 
-    public float
-        GrabDistance = 0.23f,
-        ThrowForce = 1.75f;
+    public float GrabDistance = 0.23f, ThrowForce = 1.75f;
+
+    private Transform PadModel; 
+    private Transform PadCanvas; 
+
+    void Awake()
+    {
+        PadModel = transform.Find("Pad/Model");
+        PadCanvas = transform.Find("Pad/Canvas");
+
+        if (PadCanvas != null)
+            PadCanvas.localScale = Vector3.one;
+    }
 
     public virtual void OnGrab(bool isLeft)
     {
-        transform.localScale = GorillaPad.Constants.RightHand.Scale;
+        if (PadModel != null)
+            PadModel.localScale = GorillaPad.Constants.RightHand.Scale;
 
         if (isLeft)
         {
             Hashtable hash = new Hashtable();
-
             ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
             ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", true);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
@@ -56,7 +39,6 @@ public class PadHolding : HoldableObject
         else
         {
             Hashtable hash = new Hashtable();
-
             ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
             ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", false);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
@@ -69,7 +51,8 @@ public class PadHolding : HoldableObject
     {
         transform.parent = VRRig.LocalRig.headMesh.transform.parent;
 
-        transform.localScale = GorillaPad.Constants.Chest.Scale;
+        if (PadModel != null)
+            PadModel.localScale = GorillaPad.Constants.Chest.Scale;
 
         Hashtable hash = new Hashtable();
         ExtensionMethods.AddOrUpdate(hash, "GPHolding", false);
@@ -142,17 +125,9 @@ public class PadHolding : HoldableObject
         }
     }
 
-    public override void OnHover(InteractionPoint pointHovered, GameObject hoveringHand)
-    {
+    public override void OnHover(InteractionPoint pointHovered, GameObject hoveringHand) { }
 
-    }
+    public override void OnGrab(InteractionPoint pointGrabbed, GameObject grabbingHand) { }
 
-    public override void OnGrab(InteractionPoint pointGrabbed, GameObject grabbingHand)
-    {
-    }
-
-    public override void DropItemCleanup()
-    {
-
-    }
+    public override void DropItemCleanup() { }
 }

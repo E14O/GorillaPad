@@ -17,18 +17,6 @@ namespace GorillaPad.Functions
         private bool IsUnlocked = false;
         private bool SetPower = false;
 
-        private bool isLockScreenLerping = false;
-        private float lockScreenLerpStartTime = 0f;
-        private float lockScreenLerpDuration = 0.08f;
-        private bool lockScreenLerpIn = true;
-        private CanvasGroup lockScreenCanvasGroup;
-
-        private CanvasGroup homeScreenCanvasGroup;
-        private bool isTransitioning = false;
-        private float transitionStartTime = 0f;
-        private float transitionDuration = 0.3f;
-        private bool transitioningToHome = false;
-
         void Start()
         {
             instance = this;
@@ -47,8 +35,9 @@ namespace GorillaPad.Functions
                 PadLogging.LogError($" While Setting The Custom Prop It Was Interrupted {e}");
                 return;
             }
-            ContentLoader.Bundle.AddComponent<ScreenManager>();
+            ContentLoader.BundleParent.AddComponent<ScreenManager>();
             ContentLoader.BundleParent.AddComponent<PadHolding>();
+            ContentLoader.BundleParent.AddComponent<AppCreation>();
 
             AppInterfaces = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces").gameObject;
             PadColour = ContentLoader.Bundle.transform.Find("Pad/Model").gameObject;
@@ -72,66 +61,74 @@ namespace GorillaPad.Functions
             {
                 PadColour.GetComponent<MeshRenderer>().material.color = GorillaTagger.Instance.offlineVRRig.playerColor;
             }
-
-            if (isLockScreenLerping)
-            {
-                UpdateLockScreenLerp();
-            }
-
-            if (isTransitioning)
-            {
-                UpdateScreenTransition();
-            }
-
-			AppModule.UpdateAppAnimation();
         }
 
         void ToggleMainFunction()
         {
-            if (!SetPower)
-                return;
+            if (!SetPower) return;
 
             if (AppModule.AppOpen)
             {
                 AppModule.AppOpen = false;
-                ScreenManager.LockScreen.SetActive(false);
-                ScreenManager.HomeScreen.SetActive(true);
-                IsUnlocked = true;
+                AppModule.OnAppClose();
                 return;
             }
 
-            if (!IsUnlocked)
+            GameObject activeApp = null;
+            foreach (Transform child in AppCreation.ScreenParent.transform)
             {
-                StartScreenTransition(true);
-                IsUnlocked = true;
-                return;
+                if (child.gameObject.activeSelf)
+                {
+                    activeApp = child.gameObject;
+                    break;
+                }
             }
 
-            StartScreenTransition(false); 
-            IsUnlocked = false;
+            if (ScreenManager.LockScreen.activeSelf)
+            {
+                AnimationManager.CreateAnimation(ScreenManager.LockScreen, ScreenManager.HomeScreen, true);
+                IsUnlocked = true;
+            }
+            else if (ScreenManager.HomeScreen.activeSelf)
+            {
+                AnimationManager.CreateAnimation(ScreenManager.HomeScreen, ScreenManager.LockScreen, true);
+                IsUnlocked = false;
+            }
+            else if (activeApp != null)
+            {
+                AnimationManager.CreateAnimation(activeApp, ScreenManager.HomeScreen, true);
+                IsUnlocked = true;
+            }
         }
+
 
         void TogglePower()
         {
             if (SetPower)
             {
-                StartLockScreenLerp(false);
-                ScreenManager.HomeScreen.SetActive(false);
+                if (ScreenManager.LockScreen.activeSelf)
+                    AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, false);
+                else if (ScreenManager.HomeScreen.activeSelf)
+                    AnimationManager.CreateAnimation(ScreenManager.HomeScreen, null, false);
+
                 ScreenManager.TopBar.SetActive(false);
 
-                IsUnlocked = false;
-                foreach (Transform app in Main.instance.AppInterfaces.transform)
-                {
+                foreach (Transform app in AppInterfaces.transform)
                     app.gameObject.SetActive(false);
-                }
 
+                IsUnlocked = false;
                 SetPower = false;
             }
             else
             {
                 ScreenManager.TopBar.SetActive(true);
+                ScreenManager.HomeScreen.SetActive(false);
+                ScreenManager.LockScreen.SetActive(true);
+
+                AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, true);
+
+                IsUnlocked = false;
                 SetPower = true;
-                StartLockScreenLerp(true);
             }
         }
 
@@ -144,169 +141,5 @@ namespace GorillaPad.Functions
         {
 
         }
-
-		void StartLockScreenLerp(bool fadeIn)
-		{
-			GameObject lockScreen = ScreenManager.LockScreen;
-			if (lockScreen == null)
-				return;
-			
-			if (lockScreenCanvasGroup == null)
-			{
-				lockScreenCanvasGroup = lockScreen.GetComponent<CanvasGroup>();
-				if (lockScreenCanvasGroup == null)
-					lockScreenCanvasGroup = lockScreen.AddComponent<CanvasGroup>();
-			}
-			
-			lockScreen.SetActive(true);
-			isLockScreenLerping = true;
-			lockScreenLerpStartTime = Time.time;
-			lockScreenLerpIn = fadeIn;
-			
-			if (fadeIn)
-			{
-				lockScreen.transform.localScale = Vector3.zero;
-				lockScreenCanvasGroup.alpha = 0f;
-			}
-			else
-			{
-				lockScreen.transform.localScale = Vector3.one;
-				lockScreenCanvasGroup.alpha = 1f;
-			}
-		}
-
-		void UpdateLockScreenLerp()
-		{
-			GameObject lockScreen = ScreenManager.LockScreen;
-			if (lockScreen == null)
-			{
-				isLockScreenLerping = false;
-				return;
-			}
-			float elapsed = Time.time - lockScreenLerpStartTime;
-			float t = Mathf.Clamp01(elapsed / lockScreenLerpDuration);
-			
-			float eased = 1f - Mathf.Pow(1f - t, 2f);
-			
-			if (lockScreenLerpIn)
-			{
-				lockScreen.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, eased);
-				if (lockScreenCanvasGroup != null)
-					lockScreenCanvasGroup.alpha = Mathf.Lerp(0f, 1f, eased);
-			}
-			else
-			{
-				lockScreen.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, eased);
-				if (lockScreenCanvasGroup != null)
-					lockScreenCanvasGroup.alpha = Mathf.Lerp(1f, 0f, eased);
-			}
-			
-			if (t >= 1f)
-			{
-				isLockScreenLerping = false;
-				if (lockScreenLerpIn)
-				{
-					lockScreen.transform.localScale = Vector3.one;
-					if (lockScreenCanvasGroup != null)
-						lockScreenCanvasGroup.alpha = 1f;
-				}
-				else
-				{
-					lockScreen.SetActive(false);
-					lockScreen.transform.localScale = Vector3.one;
-					if (lockScreenCanvasGroup != null)
-						lockScreenCanvasGroup.alpha = 1f;
-				}
-			}
-		}
-
-		public void StartScreenTransition(bool toHome)
-		{
-			if (lockScreenCanvasGroup == null && ScreenManager.LockScreen != null)
-			{
-				lockScreenCanvasGroup = ScreenManager.LockScreen.GetComponent<CanvasGroup>();
-				if (lockScreenCanvasGroup == null)
-					lockScreenCanvasGroup = ScreenManager.LockScreen.AddComponent<CanvasGroup>();
-			}
-			if (homeScreenCanvasGroup == null && ScreenManager.HomeScreen != null)
-			{
-				homeScreenCanvasGroup = ScreenManager.HomeScreen.GetComponent<CanvasGroup>();
-				if (homeScreenCanvasGroup == null)
-					homeScreenCanvasGroup = ScreenManager.HomeScreen.AddComponent<CanvasGroup>();
-			}
-
-			if (lockScreenCanvasGroup == null || homeScreenCanvasGroup == null)
-				return;
-
-			isTransitioning = true;
-			transitionStartTime = Time.time;
-			transitioningToHome = toHome;
-
-			if (toHome)
-			{
-				ScreenManager.LockScreen.SetActive(true);
-				ScreenManager.HomeScreen.SetActive(true);
-				lockScreenCanvasGroup.alpha = 1f;
-				homeScreenCanvasGroup.alpha = 0f;
-			}
-			else
-			{
-				ScreenManager.LockScreen.SetActive(true);
-				ScreenManager.HomeScreen.SetActive(true);
-				lockScreenCanvasGroup.alpha = 0f;
-				homeScreenCanvasGroup.alpha = 1f;
-			}
-
-			lockScreenCanvasGroup.interactable = false;
-			lockScreenCanvasGroup.blocksRaycasts = false;
-			homeScreenCanvasGroup.interactable = false;
-			homeScreenCanvasGroup.blocksRaycasts = false;
-		}
-
-		void UpdateScreenTransition()
-		{
-			if (lockScreenCanvasGroup == null || homeScreenCanvasGroup == null)
-			{
-				isTransitioning = false;
-				return;
-			}
-
-			float elapsed = Time.time - transitionStartTime;
-			float t = Mathf.Clamp01(elapsed / transitionDuration);
-
-			float eased = 1f - Mathf.Pow(1f - t, 2f);
-
-			if (transitioningToHome)
-			{
-				lockScreenCanvasGroup.alpha = Mathf.Lerp(1f, 0f, eased);
-				homeScreenCanvasGroup.alpha = Mathf.Lerp(0f, 1f, eased);
-			}
-			else
-			{
-				lockScreenCanvasGroup.alpha = Mathf.Lerp(0f, 1f, eased);
-				homeScreenCanvasGroup.alpha = Mathf.Lerp(1f, 0f, eased);
-			}
-
-			if (t >= 1f)
-			{
-				isTransitioning = false;
-				if (transitioningToHome)
-				{
-					ScreenManager.LockScreen.SetActive(false);
-					ScreenManager.HomeScreen.SetActive(true);
-					homeScreenCanvasGroup.alpha = 1f;
-				}
-				else
-				{
-					ScreenManager.LockScreen.SetActive(true);
-					ScreenManager.HomeScreen.SetActive(false);
-					lockScreenCanvasGroup.alpha = 1f;
-				}
-				lockScreenCanvasGroup.interactable = true;
-				lockScreenCanvasGroup.blocksRaycasts = true;
-				homeScreenCanvasGroup.interactable = true;
-				homeScreenCanvasGroup.blocksRaycasts = true;
-			}
-		}
     }
 }
