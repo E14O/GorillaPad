@@ -35,6 +35,7 @@ namespace GorillaPad.Functions
                 PadLogging.LogError($" While Setting The Custom Prop It Was Interrupted {e}");
                 return;
             }
+
             ContentLoader.BundleParent.AddComponent<ScreenManager>();
             ContentLoader.BundleParent.AddComponent<PadHolding>();
             ContentLoader.BundleParent.AddComponent<AppCreation>();
@@ -101,18 +102,22 @@ namespace GorillaPad.Functions
             }
         }
 
-
         void TogglePower()
         {
             if (SetPower)
             {
                 if (ScreenManager.LockScreen.activeSelf)
+                {
                     AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, false);
-                else if (ScreenManager.HomeScreen.activeSelf)
+                    ScreenManager.LockScreen.SetActive(false);
+                }
+                if (ScreenManager.HomeScreen.activeSelf)
+                {
                     AnimationManager.CreateAnimation(ScreenManager.HomeScreen, null, false);
+                    ScreenManager.HomeScreen.SetActive(false);
+                }
 
                 ScreenManager.TopBar.SetActive(false);
-
                 foreach (Transform app in AppInterfaces.transform)
                     app.gameObject.SetActive(false);
 
@@ -124,7 +129,7 @@ namespace GorillaPad.Functions
                 ScreenManager.TopBar.SetActive(true);
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.LockScreen.SetActive(true);
-
+                Canvas.ForceUpdateCanvases();
                 AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, true);
 
                 IsUnlocked = false;

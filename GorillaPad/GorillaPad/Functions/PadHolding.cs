@@ -47,8 +47,7 @@ public class PadHolding : HoldableObject
 
     public virtual void OnGrab(bool isLeft)
     {
-        if (PadModel != null)
-            PadModel.localScale = GorillaPad.Constants.RightHand.Scale;
+        transform.localScale = GorillaPad.Constants.RightHand.Scale;
 
         if (isLeft)
         {
@@ -74,8 +73,8 @@ public class PadHolding : HoldableObject
     {
         transform.parent = VRRig.LocalRig.headMesh.transform.parent;
 
-        if (PadModel != null)
-            PadModel.localScale = GorillaPad.Constants.Chest.Scale;
+        transform.localScale = GorillaPad.Constants.Chest.Scale;
+        transform.SetLocalPositionAndRotation(GorillaPad.Constants.Chest.Position, GorillaPad.Constants.Chest.Rotation);
 
         Hashtable hash = new Hashtable();
         ExtensionMethods.AddOrUpdate(hash, "GPHolding", false);
