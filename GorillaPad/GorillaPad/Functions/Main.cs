@@ -5,6 +5,8 @@ using GorillaPad.Interfaces;
 using GorillaPad.Tools;
 using Photon.Pun;
 using UnityEngine;
+using GorillaLocomotion;
+using GorillaNetworking;
 
 namespace GorillaPad.Functions
 {
@@ -40,8 +42,8 @@ namespace GorillaPad.Functions
             ContentLoader.BundleParent.AddComponent<PadHolding>();
             ContentLoader.BundleParent.AddComponent<AppCreation>();
 
-            AppInterfaces = ContentLoader.Bundle.transform.Find("Pad/Canvas/AppInterfaces").gameObject;
-            PadColour = ContentLoader.Bundle.transform.Find("Pad/Model").gameObject;
+            AppInterfaces = ContentLoader.BundleParent.transform.Find("Canvas/AppInterfaces").gameObject;
+            PadColour = ContentLoader.BundleParent.transform.Find("Model").gameObject;
 
             Transform parent = ContentLoader.BundleParent.transform.GetChild(1);
             PadButton.Create(parent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);

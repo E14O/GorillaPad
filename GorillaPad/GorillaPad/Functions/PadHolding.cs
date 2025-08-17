@@ -73,9 +73,9 @@ public class PadHolding : HoldableObject
 
     public virtual void OnGrab(bool isLeft)
     {
-<<<<<<< Updated upstream
+
         transform.localScale = GorillaPad.Constants.RightHand.Scale;
-=======
+
        
         Vector3 targetScale = new Vector3(0.098f, 0.098f, 0.098f);
         
@@ -98,7 +98,7 @@ public class PadHolding : HoldableObject
         State = ObjectGrabbyState.InHand;
         GrabPosition = transform.position; 
         GrabQuaternion = transform.rotation;
->>>>>>> Stashed changes
+
 
         if (isLeft)
         {
@@ -126,11 +126,11 @@ public class PadHolding : HoldableObject
         
        
         transform.parent = VRRig.LocalRig.headMesh.transform.parent;
-<<<<<<< Updated upstream
+
 
         transform.localScale = GorillaPad.Constants.Chest.Scale;
         transform.SetLocalPositionAndRotation(GorillaPad.Constants.Chest.Position, GorillaPad.Constants.Chest.Rotation);
-=======
+
         
         
         Vector3 chestScale = GorillaPad.Constants.Chest.Scale;
@@ -144,7 +144,7 @@ public class PadHolding : HoldableObject
         }
         
         Debug.Log($"Pad dropped. Main transform scale set to chest scale: {transform.localScale}");
->>>>>>> Stashed changes
+
 
         Hashtable hash = new Hashtable();
         ExtensionMethods.AddOrUpdate(hash, "GPHolding", false);
