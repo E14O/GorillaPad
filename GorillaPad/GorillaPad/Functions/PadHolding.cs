@@ -1,6 +1,7 @@
 ﻿using ExitGames.Client.Photon;
 using GorillaLocomotion;
 using GorillaNetworking;
+using GorillaPad.Tools;
 using Photon.Pun;
 using UnityEngine;
 
@@ -39,19 +40,19 @@ public class PadHolding : HoldableObject
 
     public float GrabDistance = 0.23f, ThrowForce = 1.75f;
 
-   
+
     public ObjectGrabbyState State { get; set; }
     public float InterpolationTime { get; set; }
     public Vector3 GrabPosition { get; set; }
     public Quaternion GrabQuaternion { get; set; }
-    
-    
+
+
     private Vector3 OriginalMountedPosition;
     private Quaternion OriginalMountedRotation;
     private Transform OriginalParent;
 
-    private Transform PadModel; 
-    private Transform PadCanvas; 
+    private Transform PadModel;
+    private Transform PadCanvas;
 
     void Awake()
     {
@@ -61,44 +62,34 @@ public class PadHolding : HoldableObject
         if (PadCanvas != null)
             PadCanvas.localScale = Vector3.one;
 
-       
         OriginalMountedPosition = transform.position;
         OriginalMountedRotation = transform.rotation;
         OriginalParent = transform.parent;
 
-      
         InterpolationTime = 1f;
         State = ObjectGrabbyState.Mounted;
     }
 
     public virtual void OnGrab(bool isLeft)
     {
-
         transform.localScale = GorillaPad.Constants.RightHand.Scale;
 
-       
-        Vector3 targetScale = new Vector3(0.098f, 0.098f, 0.098f);
-        
-    
+        Vector3 targetScale = new(0.098f, 0.098f, 0.098f);
+
         transform.localScale = targetScale;
-        
-     
+
         if (PadModel != null)
         {
             PadModel.localScale = targetScale;
-           
         }
-        
-       
-        Debug.Log($"Pad grabbed with {(isLeft ? "left" : "right")} hand. Main transform scale set to: {transform.localScale}");
-        Debug.Log($"PadModel found: {PadModel != null}");
 
-        
+        PadLogging.LogMessage($"Pad grabbed with {(isLeft ? "left" : "right")} hand. Main transform scale set to: {transform.localScale}");
+        PadLogging.LogMessage($"PadModel found: {PadModel != null}");
+
         InterpolationTime = 0f;
         State = ObjectGrabbyState.InHand;
-        GrabPosition = transform.position; 
+        GrabPosition = transform.position;
         GrabQuaternion = transform.rotation;
-
 
         if (isLeft)
         {
@@ -118,35 +109,29 @@ public class PadHolding : HoldableObject
 
     public virtual void OnDrop(bool isLeft)
     {
-       
+
         InterpolationTime = 0f;
         State = ObjectGrabbyState.Mounted;
-        GrabPosition = transform.position; 
-        GrabQuaternion = transform.rotation; 
-        
-       
-        transform.parent = VRRig.LocalRig.headMesh.transform.parent;
+        GrabPosition = transform.position;
+        GrabQuaternion = transform.rotation;
 
+        transform.parent = VRRig.LocalRig.headMesh.transform.parent;
 
         transform.localScale = GorillaPad.Constants.Chest.Scale;
         transform.SetLocalPositionAndRotation(GorillaPad.Constants.Chest.Position, GorillaPad.Constants.Chest.Rotation);
 
-        
-        
         Vector3 chestScale = GorillaPad.Constants.Chest.Scale;
         transform.localScale = chestScale;
-        
-      
+
         if (PadModel != null)
         {
             PadModel.localScale = chestScale;
-            Debug.Log($"PadModel scaled to chest scale: {PadModel.localScale}");
+           PadLogging.LogMessage($"PadModel scaled to chest scale: {PadModel.localScale}");
         }
-        
-        Debug.Log($"Pad dropped. Main transform scale set to chest scale: {transform.localScale}");
 
+        PadLogging.LogMessage($"Pad dropped. Main transform scale set to chest scale: {transform.localScale}");
 
-        Hashtable hash = new Hashtable();
+        Hashtable hash = new();
         ExtensionMethods.AddOrUpdate(hash, "GPHolding", false);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
     }
@@ -161,13 +146,13 @@ public class PadHolding : HoldableObject
         switch (State)
         {
             case ObjectGrabbyState.Mounted:
-                
+
                 if (InterpolationTime < 1f)
                 {
-                   
+
                     Vector3 chestWorldPos = VRRig.LocalRig.headMesh.transform.parent.TransformPoint(GorillaPad.Constants.Chest.Position);
                     Quaternion chestWorldRot = VRRig.LocalRig.headMesh.transform.parent.rotation * GorillaPad.Constants.Chest.Rotation;
-                    
+
                     transform.position = Vector3.Lerp(GrabPosition, chestWorldPos, InterpolationTime);
                     transform.rotation = Quaternion.Lerp(GrabQuaternion, chestWorldRot, InterpolationTime);
                     InterpolationTime += Time.deltaTime * 5f;
@@ -179,15 +164,15 @@ public class PadHolding : HoldableObject
                 {
                     Vector3 targetPosition = InLeftHand ? GorillaPad.Constants.LeftHand.Position : GorillaPad.Constants.RightHand.Position;
                     Quaternion targetRotation = InLeftHand ? GorillaPad.Constants.LeftHand.Rotation : GorillaPad.Constants.RightHand.Rotation;
-                    
-                   
-                    Transform handParent = InLeftHand ? 
-                        GorillaTagger.Instance.offlineVRRig.leftHandTransform.parent : 
+
+
+                    Transform handParent = InLeftHand ?
+                        GorillaTagger.Instance.offlineVRRig.leftHandTransform.parent :
                         GorillaTagger.Instance.offlineVRRig.rightHandTransform.parent;
-                    
+
                     Vector3 handWorldPos = handParent.TransformPoint(targetPosition);
                     Quaternion handWorldRot = handParent.rotation * targetRotation;
-                    
+
                     transform.position = Vector3.Lerp(GrabPosition, handWorldPos, InterpolationTime);
                     transform.rotation = Quaternion.Lerp(GrabQuaternion, handWorldRot, InterpolationTime);
                     InterpolationTime += Time.deltaTime * 5f;

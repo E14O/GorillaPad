@@ -7,6 +7,7 @@ using Photon.Pun;
 using UnityEngine;
 using GorillaLocomotion;
 using GorillaNetworking;
+using System.Collections;
 
 namespace GorillaPad.Functions
 {
@@ -34,7 +35,7 @@ namespace GorillaPad.Functions
             }
             catch (Exception e)
             {
-                PadLogging.LogError($" While Setting The Custom Prop It Was Interrupted {e}");
+                PadLogging.LogError($"Unable To Set Custom Prop, It Was Interrupted {e}");
                 return;
             }
 
@@ -50,7 +51,6 @@ namespace GorillaPad.Functions
             PadButton.Create(parent, "PowerButton", SelectedAudio.PowerAudio, TogglePower);
             PadButton.Create(parent, "Volume+", SelectedAudio.ButtonAudio, IncreaseVolume);
             PadButton.Create(parent, "Volume-", SelectedAudio.ButtonAudio, DecreaseVolume);
-          
         }
 
         void Update()
@@ -104,16 +104,16 @@ namespace GorillaPad.Functions
                 IsUnlocked = true;
             }
         }
-
         void TogglePower()
         {
-            if (SetPower)
+            if (SetPower) 
             {
                 if (ScreenManager.LockScreen.activeSelf)
                 {
                     AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, false);
                     ScreenManager.LockScreen.SetActive(false);
                 }
+
                 if (ScreenManager.HomeScreen.activeSelf)
                 {
                     AnimationManager.CreateAnimation(ScreenManager.HomeScreen, null, false);
@@ -121,23 +121,30 @@ namespace GorillaPad.Functions
                 }
 
                 ScreenManager.TopBar.SetActive(false);
+
                 foreach (Transform app in AppInterfaces.transform)
                     app.gameObject.SetActive(false);
 
                 IsUnlocked = false;
                 SetPower = false;
             }
-            else
+            else 
             {
                 ScreenManager.TopBar.SetActive(true);
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.LockScreen.SetActive(true);
-                Canvas.ForceUpdateCanvases();
-                AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, true);
+
+                StartCoroutine(PlayLockScreenAnimation());
 
                 IsUnlocked = false;
                 SetPower = true;
             }
+        }
+
+        private IEnumerator PlayLockScreenAnimation()
+        {
+            yield return null; 
+            AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, true);
         }
 
         void IncreaseVolume()

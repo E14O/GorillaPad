@@ -14,13 +14,19 @@ namespace GorillaPad.Interfaces
     {
         private readonly List<AppModule> Apps = new();
         public static GameObject AppParent, ScreenParent;
-        private readonly string FolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Apps");
+        private readonly string FolderPathApps = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Apps");
+        private readonly string FolderPathDLL = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "MainApp");
 
         public void Start()
         {
-            if (!Directory.Exists(FolderPath))
+            if (!Directory.Exists(FolderPathApps))
             {
-                Directory.CreateDirectory(FolderPath);
+                Directory.CreateDirectory(FolderPathApps);
+            }
+
+            if (!Directory.Exists(FolderPathDLL))
+            {
+                Directory.CreateDirectory(FolderPathDLL);
             }
 
             ScreenParent = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("AppInterfaces").gameObject;
@@ -39,8 +45,8 @@ namespace GorillaPad.Interfaces
 
         public void CreateApplication()
         {
-            string[] AppPath = Directory.GetFiles(FolderPath, "*.app");
-            string[] DllPath = Directory.GetFiles(FolderPath, "*.dll");
+            string[] AppPath = Directory.GetFiles(FolderPathApps, "*.app");
+            string[] DllPath = Directory.GetFiles(FolderPathDLL, "*.dll");
 
             foreach (string App in AppPath)
             {
@@ -79,11 +85,11 @@ namespace GorillaPad.Interfaces
         {
             Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
 
-            var CreditsAppSystem = Apps.FirstOrDefault(creditsapp => creditsapp is CreditsApp);
-            PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsAppSystem.OnAppOpen);
+            var CreditsApp = Apps.FirstOrDefault(creditsapp => creditsapp is CreditsApp);
+            PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsApp.OnAppOpen);
 
-            var SettingsAppSystem = Apps.FirstOrDefault(settapp => settapp is SettingsApp);
-            PadButton.Create(parent, "SettingsIcon", SelectedAudio.ButtonAudio, SettingsAppSystem.OnAppOpen);
+            var SettingsApp = Apps.FirstOrDefault(settapp => settapp is SettingsApp);
+            PadButton.Create(parent, "SettingsIcon", SelectedAudio.ButtonAudio, SettingsApp.OnAppOpen);
         }
     }
 
