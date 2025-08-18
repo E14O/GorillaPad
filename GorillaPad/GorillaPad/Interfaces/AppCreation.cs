@@ -79,11 +79,11 @@ namespace GorillaPad.Interfaces
         {
             Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
 
-            var CreditsAppSystem = Apps.FirstOrDefault(creditsapp => creditsapp is CreditsApp);
-            PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsAppSystem.OnAppOpen);
+            var CreditsApp = Apps.FirstOrDefault(creditsapp => creditsapp is CreditsApp);
+            PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsApp.OnAppOpen);
 
-            var SettingsAppSystem = Apps.FirstOrDefault(settapp => settapp is SettingsApp);
-            PadButton.Create(parent, "SettingsIcon", SelectedAudio.ButtonAudio, SettingsAppSystem.OnAppOpen);
+            var SettingsApp = Apps.FirstOrDefault(settapp => settapp is SettingsApp);
+            PadButton.Create(parent, "SettingsIcon", SelectedAudio.ButtonAudio, SettingsApp.OnAppOpen);
         }
     }
 

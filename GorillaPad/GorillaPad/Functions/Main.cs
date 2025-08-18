@@ -34,7 +34,7 @@ namespace GorillaPad.Functions
             }
             catch (Exception e)
             {
-                PadLogging.LogError($" While Setting The Custom Prop It Was Interrupted {e}");
+                PadLogging.LogError($"Unable To Set Custom Prop, It Was Interrupted {e}");
                 return;
             }
 
@@ -50,7 +50,6 @@ namespace GorillaPad.Functions
             PadButton.Create(parent, "PowerButton", SelectedAudio.PowerAudio, TogglePower);
             PadButton.Create(parent, "Volume+", SelectedAudio.ButtonAudio, IncreaseVolume);
             PadButton.Create(parent, "Volume-", SelectedAudio.ButtonAudio, DecreaseVolume);
-          
         }
 
         void Update()
