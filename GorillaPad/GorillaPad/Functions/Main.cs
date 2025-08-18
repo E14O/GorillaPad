@@ -7,6 +7,7 @@ using Photon.Pun;
 using UnityEngine;
 using GorillaLocomotion;
 using GorillaNetworking;
+using System.Collections;
 
 namespace GorillaPad.Functions
 {
@@ -103,16 +104,16 @@ namespace GorillaPad.Functions
                 IsUnlocked = true;
             }
         }
-
         void TogglePower()
         {
-            if (SetPower)
+            if (SetPower) 
             {
                 if (ScreenManager.LockScreen.activeSelf)
                 {
                     AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, false);
                     ScreenManager.LockScreen.SetActive(false);
                 }
+
                 if (ScreenManager.HomeScreen.activeSelf)
                 {
                     AnimationManager.CreateAnimation(ScreenManager.HomeScreen, null, false);
@@ -120,23 +121,30 @@ namespace GorillaPad.Functions
                 }
 
                 ScreenManager.TopBar.SetActive(false);
+
                 foreach (Transform app in AppInterfaces.transform)
                     app.gameObject.SetActive(false);
 
                 IsUnlocked = false;
                 SetPower = false;
             }
-            else
+            else 
             {
                 ScreenManager.TopBar.SetActive(true);
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.LockScreen.SetActive(true);
-                Canvas.ForceUpdateCanvases();
-                AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, true);
+
+                StartCoroutine(PlayLockScreenAnimation());
 
                 IsUnlocked = false;
                 SetPower = true;
             }
+        }
+
+        private IEnumerator PlayLockScreenAnimation()
+        {
+            yield return null; 
+            AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, true);
         }
 
         void IncreaseVolume()
