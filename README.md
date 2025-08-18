@@ -21,7 +21,8 @@ using GorillaPad.Interfaces;
 
 namespace GorillaPad
 {
-    internal class YourApp : AppModule
+    // make sure the class name is the same as your app name you exported in the unity project
+    internal class YourApp : AppModule 
     {
         public override string AppName => "YourApp";  // Enter your app name here (Same one as you entered in the project otherwise it wont work)
         public override string AppVersion => "0.0.1"; // Enter your app version here (This will be displayed in the bottom left hand corner of your app as defualt)
@@ -42,7 +43,28 @@ namespace GorillaPad
         // Note: DO NOT REMOVE (base.AppContent();) & (base.OnAppOpen();), Your App will automatically have a button script that runs OnAppOpen, this will also automatically open your app screen you made. 
     }
 }
+```
+If You Want To Create A Button, Use Our Built In System:
+```csharp
+using GorillaPad.Functions.UI;
+using GorillaPad.Tools;
 
+namespace GorillaPad
+{
+    internal class ButtonTest : MonoBehaviour
+    {
+        void Start()
+        {
+           GameObject parent =   ContentLoader.BundleParent.transform.GetChild(1);  // Example find the parent of the obj you want to add the button script onto.
+           PadButton.Create(parent, "Obj", SelectedAudio.ButtonAudio, ButtonFunction);
+        }
+
+        void ButtonFunction()
+        {
+           PadLogging.LogMessage("This Gets Ran When The Button Is Clicked");
+        }
+    }
+}
 ```
 If You Need Help Creating A Custom App Join The [Discord](<https://discord.gg/ntnGzFTMB6>)
 
