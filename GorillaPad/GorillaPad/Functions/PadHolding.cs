@@ -1,6 +1,8 @@
 ﻿using ExitGames.Client.Photon;
 using GorillaLocomotion;
 using GorillaNetworking;
+using GorillaPad.Functions;
+using GorillaPad.Functions.UI;
 using GorillaPad.Tools;
 using Photon.Pun;
 using UnityEngine;
@@ -72,6 +74,8 @@ public class PadHolding : HoldableObject
 
     public virtual void OnGrab(bool isLeft)
     {
+        PadButton.Create(ContentLoader.SignParent.transform, "Sign", SelectedAudio.ButtonAudio, Main.ReturnPad);
+
         transform.localScale = GorillaPad.Constants.RightHand.Scale;
 
         Vector3 targetScale = new(0.098f, 0.098f, 0.098f);
@@ -126,7 +130,7 @@ public class PadHolding : HoldableObject
         if (PadModel != null)
         {
             PadModel.localScale = chestScale;
-           PadLogging.LogMessage($"PadModel scaled to chest scale: {PadModel.localScale}");
+            PadLogging.LogMessage($"PadModel scaled to chest scale: {PadModel.localScale}");
         }
 
         PadLogging.LogMessage($"Pad dropped. Main transform scale set to chest scale: {transform.localScale}");

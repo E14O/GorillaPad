@@ -7,7 +7,7 @@ namespace GorillaPad.Tools
     internal class ContentLoader : MonoBehaviour
     {
         public static ContentLoader Instance { get; private set; }
-        public static GameObject Bundle, BundleParent, NetworkedPad;
+        public static GameObject Bundle, BundleParent, NetworkedPad, SignParent;
 
         private static bool SoundsLoaded = false;
 
@@ -36,7 +36,7 @@ namespace GorillaPad.Tools
             BundleParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
             BundleParent.transform.localScale = Constants.Asset.Scale;
 
-            GameObject SignParent = Bundle.transform.Find("Sign").gameObject;
+            SignParent = Bundle.transform.Find("Sign").gameObject;
             SignParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
             SignParent.transform.localScale = Constants.Asset.Scale;
 

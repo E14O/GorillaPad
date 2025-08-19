@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections;
 using GorillaPad.Functions.Managers;
 using GorillaPad.Functions.UI;
 using GorillaPad.Interfaces;
 using GorillaPad.Tools;
 using Photon.Pun;
 using UnityEngine;
-using GorillaLocomotion;
-using GorillaNetworking;
-using System.Collections;
 
 namespace GorillaPad.Functions
 {
@@ -15,8 +13,8 @@ namespace GorillaPad.Functions
     {
         public static Main instance;
         public GameObject AppInterfaces, PadColour;
-        private bool LastState = false;
 
+        private bool LastState = false;
         private bool IsUnlocked = false;
         private bool SetPower = false;
 
@@ -106,7 +104,7 @@ namespace GorillaPad.Functions
         }
         void TogglePower()
         {
-            if (SetPower) 
+            if (SetPower)
             {
                 if (ScreenManager.LockScreen.activeSelf)
                 {
@@ -128,7 +126,7 @@ namespace GorillaPad.Functions
                 IsUnlocked = false;
                 SetPower = false;
             }
-            else 
+            else
             {
                 ScreenManager.TopBar.SetActive(true);
                 ScreenManager.HomeScreen.SetActive(false);
@@ -143,7 +141,7 @@ namespace GorillaPad.Functions
 
         private IEnumerator PlayLockScreenAnimation()
         {
-            yield return null; 
+            yield return null;
             AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, true);
         }
 
@@ -155,6 +153,14 @@ namespace GorillaPad.Functions
         void DecreaseVolume()
         {
 
+        }
+
+        public static void ReturnPad()
+        {
+            ContentLoader.BundleParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
+            ContentLoader.BundleParent.transform.localScale = Constants.Asset.Scale;
+            var ReturnButtonScript = ContentLoader.SignParent.transform.Find("Sign");
+            ReturnButtonScript.GetComponent<PadButton>().Destroy();
         }
     }
 }

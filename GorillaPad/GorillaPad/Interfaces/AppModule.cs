@@ -24,7 +24,7 @@ namespace GorillaPad.Interfaces
             if (!currentAppObject.activeSelf)
                 currentAppObject.SetActive(true);
 
-            AnimationManager.CreateAnimation(null, currentAppObject, true);
+            AnimationManager.CreateAnimation(ScreenManager.HomeScreen, currentAppObject, true);
 
             AppOpen = true;
         }
