@@ -42,7 +42,6 @@ public class PadHolding : HoldableObject
 
     public float GrabDistance = 0.23f, ThrowForce = 1.75f;
 
-
     public ObjectGrabbyState State { get; set; }
     public float InterpolationTime { get; set; }
     public Vector3 GrabPosition { get; set; }

@@ -6,6 +6,7 @@ using GorillaPad.Interfaces;
 using GorillaPad.Tools;
 using Photon.Pun;
 using UnityEngine;
+using BepInEx.Configuration;
 
 namespace GorillaPad.Functions
 {

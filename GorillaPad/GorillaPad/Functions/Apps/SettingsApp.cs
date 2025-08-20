@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using GorillaPad.Functions.Managers;
+using GorillaPad.Functions.UI;
 using GorillaPad.Interfaces;
-using GorillaPad.Tools;
 using UnityEngine;
 
 namespace GorillaPad.Functions.Apps
@@ -22,6 +22,31 @@ namespace GorillaPad.Functions.Apps
         public override void AppContent()
         {
             base.AppContent();
+
+            Dictionary<string, Action> AllSettings = new()
+            {
+                { "Pad Colour", ChangePadColour },
+                { "Test", RunTest }
+            };
+
+            foreach (var setting in AllSettings)
+            {
+                string Title = setting.Key;
+                Action Action = setting.Value;
+                // Find defualt template, duplicate and move below the last one, change text (Title) then find button and add the script below 
+                // if settings get more then the set amount auto create a new screen and screen switch function.
+                //PadButton.Create(, "ClickSound", action);
+            }
+        }
+
+        private void ChangePadColour()
+        {
+
+        }
+
+        private void RunTest()
+        {
+
         }
     }
 }

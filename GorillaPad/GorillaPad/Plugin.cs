@@ -11,6 +11,10 @@ namespace GorillaPad
     [BepInPlugin(Constants.GUID, Constants.Name, Constants.Version)]
     public class Plugin : BaseUnityPlugin
     {
-        void Start() => new GameObject(Constants.Name, typeof(Main), typeof(PadNetworking), typeof(AnimationManager));
+        void Start()
+        {
+            new GameObject(Constants.Name, typeof(Main), typeof(PadNetworking), typeof(AnimationManager));
+            ConfigManager.Init(Config);
+        }
     }
 }
