@@ -191,10 +191,36 @@ namespace GorillaPad.Functions
 
         public static void ReturnPad()
         {
-            ContentLoader.BundleParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
-            ContentLoader.BundleParent.transform.localScale = Constants.Asset.Scale;
-            var ReturnButtonScript = ContentLoader.SignParent.transform.Find("Sign");
-            ReturnButtonScript.GetComponent<PadButton>().Destroy();
+            if (instance != null)
+                instance.StartCoroutine(instance.ReturnRoutine());
+        }
+
+        private IEnumerator ReturnRoutine()
+        {
+            var pad = ContentLoader.BundleParent;
+            Vector3 startPos = pad.transform.position;
+            Quaternion startRot = pad.transform.rotation;
+
+            Vector3 targetPos = Constants.Asset.Position;
+            Quaternion targetRot = Constants.Asset.Rotation;
+
+            float t = 0f;
+            while (t < 1f)
+            {
+                pad.transform.position = Vector3.Lerp(startPos, targetPos, t);
+                pad.transform.rotation = Quaternion.Lerp(startRot, targetRot, t);
+                t += Time.deltaTime * 3f;
+                yield return null;
+            }
+
+            pad.transform.SetParent(null, false);
+            pad.transform.localPosition = Vector3.zero;
+            pad.transform.localRotation = Quaternion.identity;
+            pad.transform.localScale = Constants.Asset.Scale;
+
+            var returnButton = ContentLoader.SignParent.transform.Find("Sign");
+            if (returnButton)
+                returnButton.GetComponent<PadButton>().Destroy();
         }
     }
 }

@@ -5,254 +5,182 @@ using GorillaPad.Functions;
 using GorillaPad.Functions.UI;
 using GorillaPad.Tools;
 using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 
-/* MIT License
-
-Copyright (c) 2023 dev9998
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.*/
-
-public enum ObjectGrabbyState
-{
-    Mounted,
-    InHand,
-    Awake
-}
+public enum GrabState { Mounted, InHand }
 
 public class PadHolding : HoldableObject
 {
-    public bool InHand = false, InLeftHand = false, PickUp = true, DidSwap = false, SwappedLeft = true;
+    public bool InHand, InLeftHand;
+    public bool PickUp = true;
+    public float GrabDistance = 0.23f;
 
-    public float GrabDistance = 0.23f, ThrowForce = 1.75f;
+    public GrabState State { get; set; }
+    public float InterpTime { get; set; }
+    public Vector3 StartPos { get; set; }
+    public Quaternion StartRot { get; set; }
 
-    public ObjectGrabbyState State { get; set; }
-    public float InterpolationTime { get; set; }
-    public Vector3 GrabPosition { get; set; }
-    public Quaternion GrabQuaternion { get; set; }
-
-
-    private Vector3 OriginalMountedPosition;
-    private Quaternion OriginalMountedRotation;
-    private Transform OriginalParent;
-
-    private Transform PadModel;
-    private Transform PadCanvas;
+    Transform padModel, padCanvas;
+    bool didSwap, swappedLeft;
 
     void Awake()
     {
-        PadModel = transform.Find("Pad/Model");
-        PadCanvas = transform.Find("Pad/Canvas");
-
-        if (PadCanvas != null)
-            PadCanvas.localScale = Vector3.one;
-
-        OriginalMountedPosition = transform.position;
-        OriginalMountedRotation = transform.rotation;
-        OriginalParent = transform.parent;
-
-        InterpolationTime = 1f;
-        State = ObjectGrabbyState.Mounted;
+        padModel = transform.Find("Pad/Model");
+        padCanvas = transform.Find("Pad/Canvas");
+        if (padCanvas) padCanvas.localScale = Vector3.one;
+        InterpTime = 1f;
+        State = GrabState.Mounted;
     }
 
-    public virtual void OnGrab(bool isLeft)
+    void Grab(bool left)
     {
         PadButton.Create(ContentLoader.SignParent.transform, "Sign", SelectedAudio.ButtonAudio, Main.ReturnPad);
-
-        transform.localScale = GorillaPad.Constants.RightHand.Scale;
-
-        Vector3 targetScale = new(0.098f, 0.098f, 0.098f);
-
-        transform.localScale = targetScale;
-
-        if (PadModel != null)
-        {
-            PadModel.localScale = targetScale;
-        }
-
-        PadLogging.LogMessage($"Pad grabbed with {(isLeft ? "left" : "right")} hand. Main transform scale set to: {transform.localScale}");
-        PadLogging.LogMessage($"PadModel found: {PadModel != null}");
-
-        InterpolationTime = 0f;
-        State = ObjectGrabbyState.InHand;
-        GrabPosition = transform.position;
-        GrabQuaternion = transform.rotation;
-
-        if (isLeft)
-        {
-            Hashtable hash = new Hashtable();
-            ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
-            ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", true);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
-        }
-        else
-        {
-            Hashtable hash = new Hashtable();
-            ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
-            ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", false);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
-        }
+        Vector3 scale = new(0.098f, 0.098f, 0.098f);
+        transform.localScale = scale;
+        if (padModel) padModel.localScale = scale;
+        InterpTime = 0f;
+        State = GrabState.InHand;
+        StartPos = transform.position;
+        StartRot = transform.rotation;
+        ExitGames.Client.Photon.Hashtable hash = new();
+        ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
+        ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", left);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
     }
 
-    public virtual void OnDrop(bool isLeft)
+    void Drop()
     {
-
-        InterpolationTime = 0f;
-        State = ObjectGrabbyState.Mounted;
-        GrabPosition = transform.position;
-        GrabQuaternion = transform.rotation;
-
-        transform.parent = VRRig.LocalRig.headMesh.transform.parent;
-
-        transform.localScale = GorillaPad.Constants.Chest.Scale;
-        transform.SetLocalPositionAndRotation(GorillaPad.Constants.Chest.Position, GorillaPad.Constants.Chest.Rotation);
-
-        Vector3 chestScale = GorillaPad.Constants.Chest.Scale;
-        transform.localScale = chestScale;
-
-        if (PadModel != null)
-        {
-            PadModel.localScale = chestScale;
-            PadLogging.LogMessage($"PadModel scaled to chest scale: {PadModel.localScale}");
-        }
-
-        PadLogging.LogMessage($"Pad dropped. Main transform scale set to chest scale: {transform.localScale}");
-
-        Hashtable hash = new();
+        InterpTime = 0f;
+        State = GrabState.Mounted;
+        StartPos = transform.position;
+        StartRot = transform.rotation;
+        ExitGames.Client.Photon.Hashtable hash = new();
         ExtensionMethods.AddOrUpdate(hash, "GPHolding", false);
-        PhotonNetwork.LocalPlayer.SetCustomProperties(hash, null, null);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
     }
 
-    public void FixedUpdate()
+    void FixedUpdate()
     {
-        HandlePadState();
-    }
+        if (InterpTime >= 1f) return;
 
-    public void HandlePadState()
-    {
         switch (State)
         {
-            case ObjectGrabbyState.Mounted:
-
-                if (InterpolationTime < 1f)
+            case GrabState.Mounted:
                 {
+                    var chestParent = VRRig.LocalRig.headMesh.transform.parent;
+                    var chestPos = chestParent.TransformPoint(GorillaPad.Constants.Chest.Position);
+                    var chestRot = chestParent.rotation * GorillaPad.Constants.Chest.Rotation;
 
-                    Vector3 chestWorldPos = VRRig.LocalRig.headMesh.transform.parent.TransformPoint(GorillaPad.Constants.Chest.Position);
-                    Quaternion chestWorldRot = VRRig.LocalRig.headMesh.transform.parent.rotation * GorillaPad.Constants.Chest.Rotation;
+                    transform.position = Vector3.Lerp(StartPos, chestPos, InterpTime);
+                    transform.rotation = Quaternion.Lerp(StartRot, chestRot, InterpTime);
 
-                    transform.position = Vector3.Lerp(GrabPosition, chestWorldPos, InterpolationTime);
-                    transform.rotation = Quaternion.Lerp(GrabQuaternion, chestWorldRot, InterpolationTime);
-                    InterpolationTime += Time.deltaTime * 5f;
+                    InterpTime += Time.deltaTime * 5f;
+
+                    if (InterpTime >= 1f)
+                    {
+                        transform.SetParent(chestParent, false);
+                        transform.localPosition = GorillaPad.Constants.Chest.Position;
+                        transform.localRotation = GorillaPad.Constants.Chest.Rotation;
+                        Vector3 scale = GorillaPad.Constants.Chest.Scale;
+                        transform.localScale = scale;
+                        if (padModel) padModel.localScale = scale;
+                    }
+                    break;
                 }
-                break;
 
-            case ObjectGrabbyState.InHand:
-                if (InHand && InterpolationTime < 1f)
+            case GrabState.InHand:
                 {
-                    Vector3 targetPosition = InLeftHand ? GorillaPad.Constants.LeftHand.Position : GorillaPad.Constants.RightHand.Position;
-                    Quaternion targetRotation = InLeftHand ? GorillaPad.Constants.LeftHand.Rotation : GorillaPad.Constants.RightHand.Rotation;
+                    if (InHand)
+                    {
+                        var parent = InLeftHand
+                            ? GorillaTagger.Instance.offlineVRRig.leftHandTransform.parent
+                            : GorillaTagger.Instance.offlineVRRig.rightHandTransform.parent;
 
+                        var pos = InLeftHand
+                            ? GorillaPad.Constants.LeftHand.Position
+                            : GorillaPad.Constants.RightHand.Position;
 
-                    Transform handParent = InLeftHand ?
-                        GorillaTagger.Instance.offlineVRRig.leftHandTransform.parent :
-                        GorillaTagger.Instance.offlineVRRig.rightHandTransform.parent;
+                        var rot = InLeftHand
+                            ? GorillaPad.Constants.LeftHand.Rotation
+                            : GorillaPad.Constants.RightHand.Rotation;
 
-                    Vector3 handWorldPos = handParent.TransformPoint(targetPosition);
-                    Quaternion handWorldRot = handParent.rotation * targetRotation;
+                        transform.position = Vector3.Lerp(StartPos, parent.TransformPoint(pos), InterpTime);
+                        transform.rotation = Quaternion.Lerp(StartRot, parent.rotation * rot, InterpTime);
 
-                    transform.position = Vector3.Lerp(GrabPosition, handWorldPos, InterpolationTime);
-                    transform.rotation = Quaternion.Lerp(GrabQuaternion, handWorldRot, InterpolationTime);
-                    InterpolationTime += Time.deltaTime * 5f;
+                        InterpTime += Time.deltaTime * 5f;
+
+                        if (InterpTime >= 1f)
+                        {
+                            transform.SetParent(parent, false);
+                            transform.localPosition = pos;
+                            transform.localRotation = rot;
+                            Vector3 scale = new(0.098f, 0.098f, 0.098f);
+                            transform.localScale = scale;
+                            if (padModel) padModel.localScale = scale;
+                        }
+                    }
+                    break;
                 }
-                break;
         }
     }
 
-    public void Update()
+    void Update()
     {
-        float left = ControllerInputPoller.instance.leftControllerGripFloat;
-        bool leftGrip = left >= 0.5f;
+        float leftGrip = ControllerInputPoller.instance.leftControllerGripFloat;
+        float rightGrip = ControllerInputPoller.instance.rightControllerGripFloat;
+        bool l = leftGrip >= 0.5f, r = rightGrip >= 0.5f;
+        float dist = GrabDistance * GTPlayer.Instance.scale;
 
-        float right = ControllerInputPoller.instance.rightControllerGripFloat;
-        bool rightGrip = right >= 0.5f;
+        if (didSwap && (!swappedLeft ? !l : !r)) didSwap = false;
 
-        var Distance = GrabDistance * GTPlayer.Instance.scale;
-        if (DidSwap && (!SwappedLeft ? !leftGrip : !rightGrip))
-            DidSwap = false;
-
-        bool pickLeft = PickUp && leftGrip && Vector3.Distance(GTPlayer.Instance.leftControllerTransform.position, transform.position) < Distance && !InHand && EquipmentInteractor.instance.leftHandHeldEquipment == null && !DidSwap;
-        bool swapLeft = InHand && leftGrip && rightGrip && !DidSwap && (Vector3.Distance(GTPlayer.Instance.leftControllerTransform.position, transform.position) < Distance) && !SwappedLeft && EquipmentInteractor.instance.leftHandHeldEquipment == null;
-        if (pickLeft || swapLeft)
+        bool pickL = PickUp && l && Vector3.Distance(GTPlayer.Instance.leftControllerTransform.position, transform.position) < dist && !InHand && EquipmentInteractor.instance.leftHandHeldEquipment == null && !didSwap;
+        bool swapL = InHand && l && r && !didSwap && Vector3.Distance(GTPlayer.Instance.leftControllerTransform.position, transform.position) < dist && !swappedLeft && EquipmentInteractor.instance.leftHandHeldEquipment == null;
+        if (pickL || swapL)
         {
-            DidSwap = swapLeft;
-            SwappedLeft = true;
+            didSwap = swapL;
+            swappedLeft = true;
             InLeftHand = true;
             InHand = true;
-
             transform.SetParent(GorillaTagger.Instance.offlineVRRig.leftHandTransform.parent);
-
             GorillaTagger.Instance.StartVibration(true, 0.1f, 0.05f);
             EquipmentInteractor.instance.leftHandHeldEquipment = this;
-            if (DidSwap) EquipmentInteractor.instance.rightHandHeldEquipment = null;
-
-            OnGrab(true);
+            if (didSwap) EquipmentInteractor.instance.rightHandHeldEquipment = null;
+            Grab(true);
         }
-        else if (!leftGrip && InHand && InLeftHand)
+        else if (!l && InHand && InLeftHand)
         {
-            InLeftHand = true;
             InHand = false;
+            InLeftHand = false;
             transform.SetParent(null);
-
             EquipmentInteractor.instance.leftHandHeldEquipment = null;
-            OnDrop(true);
+            Drop();
         }
 
-        bool pickRight = PickUp && rightGrip && Vector3.Distance(GTPlayer.Instance.rightControllerTransform.position, transform.position) < Distance && !InHand && EquipmentInteractor.instance.rightHandHeldEquipment == null && !DidSwap;
-        bool swapRight = InHand && leftGrip && rightGrip && !DidSwap && (Vector3.Distance(GTPlayer.Instance.rightControllerTransform.position, transform.position) < Distance) && SwappedLeft && EquipmentInteractor.instance.rightHandHeldEquipment == null;
-        if (pickRight || swapRight)
+        bool pickR = PickUp && r && Vector3.Distance(GTPlayer.Instance.rightControllerTransform.position, transform.position) < dist && !InHand && EquipmentInteractor.instance.rightHandHeldEquipment == null && !didSwap;
+        bool swapR = InHand && l && r && !didSwap && Vector3.Distance(GTPlayer.Instance.rightControllerTransform.position, transform.position) < dist && swappedLeft && EquipmentInteractor.instance.rightHandHeldEquipment == null;
+        if (pickR || swapR)
         {
-            DidSwap = swapRight;
-            SwappedLeft = false;
-
+            didSwap = swapR;
+            swappedLeft = false;
             InLeftHand = false;
             InHand = true;
             transform.SetParent(GorillaTagger.Instance.offlineVRRig.rightHandTransform.parent);
             GorillaTagger.Instance.StartVibration(false, 0.1f, 0.05f);
             EquipmentInteractor.instance.rightHandHeldEquipment = this;
-            if (DidSwap) EquipmentInteractor.instance.leftHandHeldEquipment = null;
-
-            OnGrab(false);
+            if (didSwap) EquipmentInteractor.instance.leftHandHeldEquipment = null;
+            Grab(false);
         }
-        else if (!rightGrip && InHand && !InLeftHand)
+        else if (!r && InHand && !InLeftHand)
         {
-            InLeftHand = false;
             InHand = false;
             transform.SetParent(null);
-
             EquipmentInteractor.instance.rightHandHeldEquipment = null;
-            OnDrop(false);
+            Drop();
         }
     }
 
     public override void OnHover(InteractionPoint pointHovered, GameObject hoveringHand) { }
-
     public override void OnGrab(InteractionPoint pointGrabbed, GameObject grabbingHand) { }
-
     public override void DropItemCleanup() { }
 }
