@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using GorillaPad.Tools;
+﻿using GorillaPad.Tools;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using ExitGames.Client.Photon;
 
 namespace GorillaPad.Functions.Managers
 {
@@ -44,27 +43,27 @@ namespace GorillaPad.Functions.Managers
             PadToGive.name = $"{GPlayerName}`s Pad";
 
             bool HoldingGP = !(bool)_Player.CustomProperties["GPHolding"];
-			if (HoldingGP)
-			{
-				PadToGive.transform.localScale = Constants.Chest.Scale;
+            if (HoldingGP)
+            {
+                PadToGive.transform.localScale = Constants.Chest.Scale;
 
                 bool IsLeft = !(bool)_Player.CustomProperties["GPIsLeft"];
-				if (IsLeft)
-				{
-					PadToGive.transform.parent = GPRig.rightHandTransform;
+                if (IsLeft)
+                {
+                    PadToGive.transform.parent = GPRig.rightHandTransform;
                     PadToGive.transform.SetLocalPositionAndRotation(Constants.LeftHand.Position, Constants.LeftHand.Rotation);
                 }
-				else
-				{
-					PadToGive.transform.parent = GPRig.leftHandTransform;
+                else
+                {
+                    PadToGive.transform.parent = GPRig.leftHandTransform;
                     PadToGive.transform.SetLocalPositionAndRotation(Constants.RightHand.Position, Constants.RightHand.Rotation);
                 }
-			}
-			else
-			{
-				PadToGive.transform.parent = GPRig.headMesh.transform.parent;
+            }
+            else
+            {
+                PadToGive.transform.parent = GPRig.headMesh.transform.parent;
                 PadToGive.transform.SetLocalPositionAndRotation(Constants.Chest.Position, Constants.Chest.Rotation);
-			}
+            }
 
             GorillaPads.Add(PadToGive);
             NetworkedPlayers[PadToGive] = _Player;
@@ -78,7 +77,7 @@ namespace GorillaPad.Functions.Managers
                 if (pad.Value == targetPlayer)
                 {
                     PadObj = pad.Key;
-                    break; 
+                    break;
                 }
             }
 

@@ -1,14 +1,11 @@
 ﻿using GorillaPad.Functions.UI;
 using GorillaPad.Interfaces;
-using GorillaPad.Tools;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GorillaPad.Functions.Apps
 {
     internal class CreditsApp : AppModule
     {
-        // App That Cannot Be Removed.
         public override string AppName => "Credits";
         public override string AppVersion => "0.0.1";
 

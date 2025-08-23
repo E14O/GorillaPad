@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
-using GorillaPad.Functions.Managers;
+﻿using GorillaPad.Functions.Managers;
 using GorillaPad.Functions.UI;
 using GorillaPad.Interfaces;
 using GorillaPad.Tools;
 using Photon.Pun;
+using System;
+using System.Collections;
 using UnityEngine;
-using BepInEx.Configuration;
 
 namespace GorillaPad.Functions
 {
@@ -19,9 +18,25 @@ namespace GorillaPad.Functions
         private bool IsUnlocked = false;
         private bool SetPower = false;
 
+        private float currentVolume = 0.5f;
+        private const float volumeStep = 0.1f;
+
+        private AudioSource powerAudio;
+        private AudioSource buttonAudio;
+
         void Start()
         {
-            instance = this;
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             GorillaTagger.OnPlayerSpawned(Initialization);
         }
 
@@ -45,6 +60,9 @@ namespace GorillaPad.Functions
             AppInterfaces = ContentLoader.BundleParent.transform.Find("Canvas/AppInterfaces").gameObject;
             PadColour = ContentLoader.BundleParent.transform.Find("Model").gameObject;
 
+            ContentLoader.GetSounds(ref powerAudio, ref buttonAudio);
+            ApplyVolume();
+
             Transform parent = ContentLoader.BundleParent.transform.GetChild(1);
             PadButton.Create(parent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);
             PadButton.Create(parent, "PowerButton", SelectedAudio.PowerAudio, TogglePower);
@@ -55,20 +73,27 @@ namespace GorillaPad.Functions
         void Update()
         {
             if (LastState && !AppModule.AppOpen)
-            {
                 AppModule.OnAppClose();
-            }
+
             LastState = AppModule.AppOpen;
 
             if (GorillaTagger.Instance.offlineVRRig != null)
-            {
                 PadColour.GetComponent<MeshRenderer>().material.color = GorillaTagger.Instance.offlineVRRig.playerColor;
-            }
         }
 
         void ToggleMainFunction()
         {
-            if (!SetPower) return;
+            if (!SetPower)
+            {
+                TogglePower();
+                if (SetPower)
+                {
+                    ScreenManager.LockScreen.SetActive(false);
+                    ScreenManager.HomeScreen.SetActive(true);
+                    IsUnlocked = true;
+                }
+                return;
+            }
 
             if (AppModule.AppOpen)
             {
@@ -103,21 +128,16 @@ namespace GorillaPad.Functions
                 IsUnlocked = true;
             }
         }
+
         void TogglePower()
         {
             if (SetPower)
             {
                 if (ScreenManager.LockScreen.activeSelf)
-                {
                     AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, false);
-                    ScreenManager.LockScreen.SetActive(false);
-                }
 
                 if (ScreenManager.HomeScreen.activeSelf)
-                {
                     AnimationManager.CreateAnimation(ScreenManager.HomeScreen, null, false);
-                    ScreenManager.HomeScreen.SetActive(false);
-                }
 
                 ScreenManager.TopBar.SetActive(false);
 
@@ -133,7 +153,10 @@ namespace GorillaPad.Functions
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.LockScreen.SetActive(true);
 
-                StartCoroutine(PlayLockScreenAnimation());
+                if (instance != null && instance.isActiveAndEnabled)
+                    instance.StartCoroutine(instance.PlayLockScreenAnimation());
+                else
+                    Debug.LogError("Main instance not available to run coroutine");
 
                 IsUnlocked = false;
                 SetPower = true;
@@ -148,12 +171,22 @@ namespace GorillaPad.Functions
 
         void IncreaseVolume()
         {
-
+            currentVolume = Mathf.Clamp01(currentVolume + volumeStep);
+            ApplyVolume();
+            PadLogging.LogInfo($"Volume Increased: {Mathf.RoundToInt(currentVolume * 100)}%");
         }
 
         void DecreaseVolume()
         {
+            currentVolume = Mathf.Clamp01(currentVolume - volumeStep);
+            ApplyVolume();
+            PadLogging.LogInfo($"Volume Decreased: {Mathf.RoundToInt(currentVolume * 100)}%");
+        }
 
+        private void ApplyVolume()
+        {
+            if (powerAudio != null) powerAudio.volume = currentVolume;
+            if (buttonAudio != null) buttonAudio.volume = currentVolume;
         }
 
         public static void ReturnPad()

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using GorillaPad.Functions.Apps;
+using GorillaPad.Functions.UI;
+using GorillaPad.Tools;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using GorillaPad.Functions.Apps;
-using GorillaPad.Functions.UI;
-using GorillaPad.Tools;
 using UnityEngine;
 
 namespace GorillaPad.Interfaces
@@ -20,14 +20,10 @@ namespace GorillaPad.Interfaces
         public void Start()
         {
             if (!Directory.Exists(FolderPathApps))
-            {
                 Directory.CreateDirectory(FolderPathApps);
-            }
 
             if (!Directory.Exists(FolderPathDLL))
-            {
                 Directory.CreateDirectory(FolderPathDLL);
-            }
 
             ScreenParent = ContentLoader.BundleParent.transform.GetChild(1).transform.Find("AppInterfaces").gameObject;
             AppParent = ContentLoader.BundleParent.transform.GetChild(1).GetChild(6).transform.Find("GridLayout").gameObject;
@@ -35,9 +31,7 @@ namespace GorillaPad.Interfaces
             var appTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(AppModule)) && !t.IsAbstract);
 
             foreach (var type in appTypes)
-            {
                 Apps.Add((AppModule)Activator.CreateInstance(type));
-            }
 
             CreateApplication();
             CreateDefaultApps();
@@ -92,5 +86,4 @@ namespace GorillaPad.Interfaces
             PadButton.Create(parent, "SettingsIcon", SelectedAudio.ButtonAudio, SettingsApp.OnAppOpen);
         }
     }
-
 }

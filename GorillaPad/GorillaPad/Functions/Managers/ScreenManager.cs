@@ -1,6 +1,5 @@
-﻿using System;
-using GorillaPad.Tools;
-using TMPro;
+﻿using GorillaPad.Tools;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -4,11 +4,9 @@ using UnityEngine;
 
 namespace GorillaPad.Functions.UI
 {
-
     public class PadButton : GorillaPressableButton
     {
         private Action OnButtonPress;
-
         private SelectedAudio selectedSound;
 
         public static PadButton Create(Transform parent, string objectName, SelectedAudio soundType, Action executeFunction)
@@ -56,4 +54,3 @@ namespace GorillaPad.Functions.UI
         ButtonAudio
     }
 }
-

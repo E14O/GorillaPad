@@ -1,6 +1,5 @@
 ﻿using GorillaPad.Functions;
 using GorillaPad.Functions.Managers;
-using GorillaPad.Tools;
 using UnityEngine;
 
 namespace GorillaPad.Interfaces
@@ -11,7 +10,6 @@ namespace GorillaPad.Interfaces
         public abstract string AppVersion { get; }
 
         public static bool AppOpen = false;
-
         private static GameObject currentAppObject = null;
 
         public virtual void OnAppOpen()
