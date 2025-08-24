@@ -81,6 +81,8 @@ namespace GorillaPad.Functions
             {
                 if (GorillaTagger.Instance.offlineVRRig != null)
                     PadColour.GetComponent<MeshRenderer>().material.color = GorillaTagger.Instance.offlineVRRig.playerColor;
+
+                AppModule.TickCurrent();
             }
         }
 

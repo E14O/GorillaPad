@@ -11,6 +11,7 @@ namespace GorillaPad.Interfaces
 
         public static bool AppOpen = false;
         private static GameObject currentAppObject = null;
+        private static AppModule currentAppModule = null;
 
         public virtual void OnAppOpen()
         {
@@ -25,6 +26,7 @@ namespace GorillaPad.Interfaces
             AnimationManager.CreateAnimation(ScreenManager.HomeScreen, currentAppObject, true);
 
             AppOpen = true;
+            currentAppModule = this;
         }
 
         public static void OnAppClose()
@@ -35,11 +37,19 @@ namespace GorillaPad.Interfaces
 
             AppOpen = false;
             currentAppObject = null;
+            currentAppModule = null;
         }
 
         public virtual void AppContent()
         {
 
+        }
+        public virtual void Tick() { }
+
+        public static void TickCurrent()
+        {
+            if (currentAppModule != null && AppOpen)
+                currentAppModule.Tick();
         }
     }
 }

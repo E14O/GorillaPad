@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace GorillaPad.Interfaces
 {
-    internal class AppCreation : MonoBehaviour
+    public class AppCreation : MonoBehaviour
     {
         private readonly List<AppModule> Apps = new();
         public static GameObject AppParent, ScreenParent;
