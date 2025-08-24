@@ -77,8 +77,11 @@ namespace GorillaPad.Functions
 
             LastState = AppModule.AppOpen;
 
-            if (GorillaTagger.Instance.offlineVRRig != null)
-                PadColour.GetComponent<MeshRenderer>().material.color = GorillaTagger.Instance.offlineVRRig.playerColor;
+            if (ContentLoader.BundleLoaded)
+            {
+                if (GorillaTagger.Instance.offlineVRRig != null)
+                    PadColour.GetComponent<MeshRenderer>().material.color = GorillaTagger.Instance.offlineVRRig.playerColor;
+            }
         }
 
         void ToggleMainFunction()

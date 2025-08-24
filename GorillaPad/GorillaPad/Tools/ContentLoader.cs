@@ -10,6 +10,7 @@ namespace GorillaPad.Tools
         public static GameObject Bundle, BundleParent, NetworkedPad, SignParent;
 
         private static bool SoundsLoaded = false;
+        public static bool BundleLoaded = false;
 
         public static void InitialiseContent()
         {
@@ -19,6 +20,7 @@ namespace GorillaPad.Tools
 
                 AssetBundle assetBundle = InitialiseBundle(Constants.BundlePath);
                 Bundle = Instantiate(assetBundle.LoadAsset<GameObject>(Constants.BundleName));
+                BundleLoaded = true;
 
                 BundlePositions();
 

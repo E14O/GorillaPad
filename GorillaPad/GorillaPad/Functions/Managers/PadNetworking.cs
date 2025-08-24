@@ -1,8 +1,10 @@
-﻿using GorillaPad.Tools;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using GorillaLocomotion;
+using GorillaPad.Tools;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GorillaPad.Functions.Managers
@@ -47,15 +49,15 @@ namespace GorillaPad.Functions.Managers
             {
                 PadToGive.transform.localScale = Constants.Chest.Scale;
 
-                bool IsLeft = !(bool)_Player.CustomProperties["GPIsLeft"];
+                bool IsLeft = (bool)_Player.CustomProperties["GPIsLeft"];
                 if (IsLeft)
                 {
-                    PadToGive.transform.parent = GPRig.rightHandTransform;
+                    PadToGive.transform.parent = GPRig.leftHandTransform;
                     PadToGive.transform.SetLocalPositionAndRotation(Constants.LeftHand.Position, Constants.LeftHand.Rotation);
                 }
                 else
                 {
-                    PadToGive.transform.parent = GPRig.leftHandTransform;
+                    PadToGive.transform.parent = GPRig.rightHandTransform;
                     PadToGive.transform.SetLocalPositionAndRotation(Constants.RightHand.Position, Constants.RightHand.Rotation);
                 }
             }
@@ -81,29 +83,46 @@ namespace GorillaPad.Functions.Managers
                 }
             }
 
+            if (PadObj == null)
+                return;
+
             VRRig rig = GorillaGameManager.StaticFindRigForPlayer(targetPlayer);
-            bool HoldingGP = !(bool)targetPlayer.CustomProperties["GPHolding"];
+
+            if (!targetPlayer.CustomProperties.ContainsKey("GPHolding") ||
+                !targetPlayer.CustomProperties.ContainsKey("GPIsLeft"))
+                return;
+
+            bool HoldingGP = (bool)targetPlayer.CustomProperties["GPHolding"];
+            bool IsLeft = (bool)targetPlayer.CustomProperties["GPIsLeft"];
 
             if (HoldingGP)
             {
                 PadObj.transform.localScale = Constants.Chest.Scale;
 
-                bool IsLeft = !(bool)targetPlayer.CustomProperties["GPIsLeft"];
                 if (IsLeft)
                 {
-                    PadObj.transform.parent = rig.rightHandTransform;
-                    PadObj.transform.SetLocalPositionAndRotation(Constants.LeftHand.Position, Constants.LeftHand.Rotation);
+                    if (rig.leftHandTransform != null)
+                    {
+                        PadObj.transform.parent = rig.leftHandTransform;
+                        PadObj.transform.SetLocalPositionAndRotation(Constants.LeftHand.Position, Constants.LeftHand.Rotation);
+                    }
                 }
                 else
                 {
-                    PadObj.transform.parent = rig.leftHandTransform;
-                    PadObj.transform.SetLocalPositionAndRotation(Constants.RightHand.Position, Constants.RightHand.Rotation);
+                    if (rig.rightHandTransform != null)
+                    {
+                        PadObj.transform.parent = rig.rightHandTransform;
+                        PadObj.transform.SetLocalPositionAndRotation(Constants.RightHand.Position, Constants.RightHand.Rotation);
+                    }
                 }
             }
             else
             {
-                PadObj.transform.parent = rig.headMesh.transform.parent;
-                PadObj.transform.SetLocalPositionAndRotation(Constants.Chest.Position, Constants.Chest.Rotation);
+                if (rig.headMesh != null)
+                {
+                    PadObj.transform.parent = rig.headMesh.transform.parent;
+                    PadObj.transform.SetLocalPositionAndRotation(Constants.Chest.Position, Constants.Chest.Rotation);
+                }
             }
         }
 
@@ -131,7 +150,7 @@ namespace GorillaPad.Functions.Managers
         public override void OnLeftRoom()
         {
             foreach (var Pad in GorillaPads)
-                Pad.Destroy();
+                Destroy(Pad);
 
             GorillaPads.Clear();
             NetworkedPlayers.Clear();
