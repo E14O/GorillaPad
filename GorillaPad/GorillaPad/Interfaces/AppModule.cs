@@ -27,6 +27,7 @@ namespace GorillaPad.Interfaces
 
             AppOpen = true;
             currentAppModule = this;
+            AppContent();
         }
 
         public static void OnAppClose()
