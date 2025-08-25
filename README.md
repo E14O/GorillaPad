@@ -24,23 +24,29 @@ namespace GorillaPad
     // make sure the class name is the same as your app name you exported in the unity project
     internal class YourApp : AppModule 
     {
-        public override string AppName => "YourApp";  // Enter your app name here (Same one as you entered in the project otherwise it wont work)
+        public override string AppName => "YourApp";  // This is what your app will be called on the homepage.
         public override string AppVersion => "0.0.1"; // Enter your app version here (This will be displayed in the bottom left hand corner of your app as defualt)
 
         // OnAppOpened is called when the user clicks on the button to open the app
         public override void OnAppOpen()
         {
             base.OnAppOpen();
-            AppContent();
+            // Code here will be run before AppContent. So do start up code here and find gameobj inside AppContent to avoid null refrences.
         }
 
-        // Write your main app content here, this gets ran once all your code in OnAppOpen has been finished (Keep AppContent(); in OnAppOpen or it wont run)
         public override void AppContent()
         {
             base.AppContent();
+            // Main app content here (find gamobjs, add button scripts e.c)
         }
 
-        // Note: DO NOT REMOVE (base.AppContent();) & (base.OnAppOpen();), Your App will automatically have a button script that runs OnAppOpen, this will also automatically open your app screen you made. 
+        public override void Tick()
+        {
+            base.Tick();
+            // This acts like update. While your app is open code here will run every frame.
+        }
+
+        // Note: DO NOT REMOVE (base.AppContent();) & (base.OnAppOpen();) & (base.Tick();), Your App will automatically have a button script that runs OnAppOpen, this will also automatically open your app screen you made. 
     }
 }
 ```
