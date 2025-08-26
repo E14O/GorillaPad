@@ -91,7 +91,7 @@ namespace GorillaPad.Interfaces
 
         public void CreateDefaultApps()
         {
-            Transform parent = ContentLoader.Bundle.transform.GetChild(0)?.GetChild(1)?.GetChild(6)?.GetChild(1);
+            Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
             var CreditsApp = Apps.FirstOrDefault(creditsapp => creditsapp is CreditsApp);
             PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsApp.OnAppOpen);
 
