@@ -1,5 +1,5 @@
 # GorillaPad!
-GorillaPad is a GorillaTag Mod Made By E14O & H4RNS, past developers include Wryser, NotABird, Striker67, Ty, Cyn Who Helped Develop The Old Version Of GorillaPad.
+GorillaPad is a GorillaTag Mod Made By E14O & H4RNS, past developers include Wryser, NotABird, Striker67, Ty, Cyn Who Helped Develop The Older Versions Of GorillaPad.
 
 ## Q&A
 How Do I Install GorillaPad?
@@ -9,7 +9,7 @@ How Do I Make Custom Apps?
 - Follow The Guide Below To Successfully Create A Custom App
 
 How Do I Install Custom Apps?
-- Leaderboard, Music, Camera Will All Be In The Download When You First Install The Mod. Additinal Cusotm Apps Made By The Community Are Found In [GorillaPad Discord](<https://discord.gg/ntnGzFTMB6>)
+- Leaderboard, Music, Camera Will All Be In The Download When You First Install The Mod. Additinal Custom Apps Made By The Community Are Found In [GorillaPad Discord](<https://discord.gg/ntnGzFTMB6>)
 
 ## For Developers:
 
@@ -21,13 +21,13 @@ using GorillaPad.Interfaces;
 
 namespace GorillaPad
 {
-    // make sure the class name is the same as your app name you exported in the unity project
+    // make sure the class name is the same as your app name that you exported in the unity project.
     internal class YourApp : AppModule 
     {
         public override string AppName => "YourApp";  // This is what your app will be called on the homepage.
-        public override string AppVersion => "0.0.1"; // Enter your app version here (This will be displayed in the bottom left hand corner of your app as defualt)
+        public override string AppVersion => "0.0.1"; // Enter your app version here (This will be displayed in the bottom left hand corner of your app as defualt).
 
-        // OnAppOpened is called when the user clicks on the button to open the app
+        // OnAppOpened is called when the user opens the app
         public override void OnAppOpen()
         {
             base.OnAppOpen();
@@ -37,13 +37,13 @@ namespace GorillaPad
         public override void AppContent()
         {
             base.AppContent();
-            // Main app content here (find gamobjs, add button scripts e.c)
+            // Main app content here (find gamobjs, add button scripts e.c).
         }
 
         public override void Tick()
         {
             base.Tick();
-            // This acts like update. While your app is open code here will run every frame.
+            // This acts like update. While your app is open, code here will run every frame.
         }
 
         // Note: DO NOT REMOVE (base.AppContent();) & (base.OnAppOpen();) & (base.Tick();), Your App will automatically have a button script that runs OnAppOpen, this will also automatically open your app screen you made. 
@@ -53,18 +53,19 @@ namespace GorillaPad
 If You Want To Create A Button, Use Our Built In System:
 ```csharp
 
-  public override void AppContent()
-  {
-     base.AppContent();
+public override void AppContent()
+{
+    base.AppContent();
 
-     GameObject parent = Main.instance.AppInterfaces.transform.Find($"{AppName}App").gameObject;// I wouldnt recommend changing this path if you are just looking to create a button inside your app itself.
-     PadButton.Create(parent, "Obj", SelectedAudio.ButtonAudio, ButtonFunction);
-  }
+    GameObject parent = Main.instance.AppInterfaces.transform.Find($"{AppName}App").gameObject;
+    PadButton.Create(parent, "Obj", SelectedAudio.ButtonAudio, ButtonFunction);
+}
 
-  void ButtonFunction()
-  {
-     PadLogging.LogMessage("This Gets Ran When The Button Is Clicked");
-  }
+void ButtonFunction()
+{
+    PadLogging.LogMessage("This Gets Ran When The Button Is Clicked");
+}
+
 ```
 If You Need Help Creating A Custom App Join The [Discord](<https://discord.gg/ntnGzFTMB6>)
 
