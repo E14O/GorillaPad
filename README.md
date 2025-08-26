@@ -52,25 +52,19 @@ namespace GorillaPad
 ```
 If You Want To Create A Button, Use Our Built In System:
 ```csharp
-using GorillaPad.Functions.UI;
-using GorillaPad.Tools;
 
-namespace GorillaPad
-{
-    internal class ButtonTest : MonoBehaviour
-    {
-        void Start()
-        {
-           GameObject parent =   ContentLoader.BundleParent.transform.GetChild(1);  // Example find the parent of the obj you want to add the button script onto.
-           PadButton.Create(parent, "Obj", SelectedAudio.ButtonAudio, ButtonFunction);
-        }
+  public override void AppContent()
+  {
+     base.AppContent();
 
-        void ButtonFunction()
-        {
-           PadLogging.LogMessage("This Gets Ran When The Button Is Clicked");
-        }
-    }
-}
+     GameObject parent = Main.instance.AppInterfaces.transform.Find($"{AppName}App").gameObject;// I wouldnt recommend changing this path if you are just looking to create a button inside your app itself.
+     PadButton.Create(parent, "Obj", SelectedAudio.ButtonAudio, ButtonFunction);
+  }
+
+  void ButtonFunction()
+  {
+     PadLogging.LogMessage("This Gets Ran When The Button Is Clicked");
+  }
 ```
 If You Need Help Creating A Custom App Join The [Discord](<https://discord.gg/ntnGzFTMB6>)
 
