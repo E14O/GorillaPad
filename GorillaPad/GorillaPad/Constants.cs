@@ -5,9 +5,9 @@ namespace GorillaPad
 {
     internal class Constants
     {
-        public const string GUID = "e14o.h4rns.spankypluh.cody.gorillapad";
+        public const string GUID = "e14o.h4rns.gorillapad";
         public const string Name = "GorillaPad";
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.2";
         public const string CustomProp = "GP";
 
         public const string BundleName = "GPBundle";
@@ -21,11 +21,5 @@ namespace GorillaPad
         // Hand Held Transforms
         public static readonly TransformState LeftHand = new(new Vector3(-0.1104f, 0.1137f, 0.0552f), Quaternion.Euler(43.8616f, 119.6724f, 30.9465f), new Vector3(.098f, .098f, .098f));
         public static readonly TransformState RightHand = new(new Vector3(0.1104f, 0.1137f, 0.0552f), Quaternion.Euler(43.8616f, 60.3276f, 329.0535f), new Vector3(.098f, .098f, .098f));
-
-        // TO FIX:
-        /* when moving, and grabbed, POS gets messed up
-         * make our own holdable engine
-         * fix netowking errors
-        */
     }
 }

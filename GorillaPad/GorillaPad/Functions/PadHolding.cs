@@ -134,8 +134,8 @@ public class PadHolding : HoldableObject
 
         if (didSwap && (!swappedLeft ? !l : !r)) didSwap = false;
 
-        bool pickL = PickUp && l && Vector3.Distance(GTPlayer.Instance.leftControllerTransform.position, transform.position) < dist && !InHand && EquipmentInteractor.instance.leftHandHeldEquipment == null && !didSwap;
-        bool swapL = InHand && l && r && !didSwap && Vector3.Distance(GTPlayer.Instance.leftControllerTransform.position, transform.position) < dist && !swappedLeft && EquipmentInteractor.instance.leftHandHeldEquipment == null;
+        bool pickL = PickUp && l && Vector3.Distance(GTPlayer.Instance.LeftHand.controllerTransform.position, transform.position) < dist && !InHand && EquipmentInteractor.instance.leftHandHeldEquipment == null && !didSwap;
+        bool swapL = InHand && l && r && !didSwap && Vector3.Distance(GTPlayer.Instance.LeftHand.controllerTransform.position, transform.position) < dist && !swappedLeft && EquipmentInteractor.instance.leftHandHeldEquipment == null;
         if (pickL || swapL)
         {
             didSwap = swapL;
@@ -157,8 +157,8 @@ public class PadHolding : HoldableObject
             Drop();
         }
 
-        bool pickR = PickUp && r && Vector3.Distance(GTPlayer.Instance.rightControllerTransform.position, transform.position) < dist && !InHand && EquipmentInteractor.instance.rightHandHeldEquipment == null && !didSwap;
-        bool swapR = InHand && l && r && !didSwap && Vector3.Distance(GTPlayer.Instance.rightControllerTransform.position, transform.position) < dist && swappedLeft && EquipmentInteractor.instance.rightHandHeldEquipment == null;
+        bool pickR = PickUp && r && Vector3.Distance(GTPlayer.Instance.RightHand.controllerTransform.position, transform.position) < dist && !InHand && EquipmentInteractor.instance.rightHandHeldEquipment == null && !didSwap;
+        bool swapR = InHand && l && r && !didSwap && Vector3.Distance(GTPlayer.Instance.RightHand.controllerTransform.position, transform.position) < dist && swappedLeft && EquipmentInteractor.instance.rightHandHeldEquipment == null;
         if (pickR || swapR)
         {
             didSwap = swapR;

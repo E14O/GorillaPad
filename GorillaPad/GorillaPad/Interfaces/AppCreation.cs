@@ -14,6 +14,7 @@ namespace GorillaPad.Interfaces
     public class AppCreation : MonoBehaviour
     {
         private readonly List<AppModule> Apps = new();
+        public static Dictionary<string, GameObject> AppParents = new Dictionary<string, GameObject>();
         public static GameObject AppParent, ScreenParent;
         private readonly string FolderPathApps = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Apps");
         private readonly string FolderPathDLL = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "MainApp");
@@ -85,6 +86,17 @@ namespace GorillaPad.Interfaces
 
                     Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
                     PadButton.Create(parent, $"{App.AppName}Icon", SelectedAudio.ButtonAudio, App.OnAppOpen);
+
+                    var foundPrefab = ScreenParent.transform.Find($"{App.AppName}App");
+                    if (foundPrefab != null && !AppParents.ContainsKey(App.AppName))
+                    {
+                        AppParents.Add(App.AppName, foundPrefab.gameObject);
+                        PadLogging.LogMessage($"Set-up: {App.AppName} prefab in AppParents!");
+                    }
+                    else
+                    {
+                        PadLogging.LogWarning($"Could not find prefab for {App.AppName}");
+                    }
                 }
             }
         }
