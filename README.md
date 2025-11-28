@@ -9,7 +9,7 @@ How Do I Make Custom Apps?
 - Follow The Guide Below To Successfully Create A Custom App
 
 How Do I Install Custom Apps?
-- Leaderboard, Music, Camera Will All Be In The Download When You First Install The Mod. Additinal Custom Apps Made By The Community Are Found In [GorillaPad Discord](<https://discord.gg/ntnGzFTMB6>)
+- Leaderboard, Music, Camera Will All Be In The Download When You First Install The Mod. Additinal Custom Apps Made By The Community Are Found In [GorillaPad Discord](<https://discord.gg/h3DKvjTb4u>)
 
 ## For Developers:
 
@@ -67,7 +67,7 @@ void ButtonFunction()
 }
 
 ```
-If You Need Help Creating A Custom App Join The [Discord](<https://discord.gg/ntnGzFTMB6>)
+If You Need Help Creating A Custom App Join The [Discord](<https://discord.gg/h3DKvjTb4u>)
 
 ## Disclaimer
 This product is not affiliated with Another Axiom Inc. or its videogames Gorilla Tag and Orion Drift and is not endorsed or otherwise sponsored by Another Axiom. Portions of the materials contained herein are property of Another Axiom. ©2021 Another Axiom Inc.
