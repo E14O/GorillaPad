@@ -35,7 +35,8 @@ public class PadHolding : HoldableObject
 
     void Grab(bool left)
     {
-        PadButton.Create(ContentLoader.SignParent.transform, "Sign", SelectedAudio.ButtonAudio, Main.ReturnPad);
+        transform.SetParent(null, true);
+
         Vector3 scale = new(0.098f, 0.098f, 0.098f);
         transform.localScale = scale;
         if (padModel) padModel.localScale = scale;
@@ -47,6 +48,28 @@ public class PadHolding : HoldableObject
         ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
         ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", left);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
+        InHand = true;
+        InLeftHand = left;
+
+        StartCoroutine(AddReturnScript());
+
+        if (ContentLoader.SignParent.transform.Find("Sign").GetComponent<PadButton>() == null)
+        {
+            PadButton.Create(ContentLoader.SignParent.transform, "Sign", SelectedAudio.ButtonAudio, Main.ReturnPad);
+        }
+    }
+
+    private IEnumerator AddReturnScript()
+    {
+        yield return new WaitForSeconds(5f);
+
+        Transform sign = ContentLoader.SignParent.transform.Find("Sign");
+
+        if (sign != null && sign.GetComponent<PadButton>() == null)
+        {
+            PadButton.Create(sign, "Sign", SelectedAudio.ButtonAudio, Main.ReturnPad);
+        }
     }
 
     void Drop()

@@ -218,9 +218,9 @@ namespace GorillaPad.Functions
                 yield return null;
             }
 
-            pad.transform.SetParent(null, false);
-            pad.transform.localPosition = Vector3.zero;
-            pad.transform.localRotation = Quaternion.identity;
+            pad.transform.SetParent(ContentLoader.Bundle.transform, false);
+            pad.transform.position = Constants.Asset.Position;
+            pad.transform.rotation = Constants.Asset.Rotation;
             pad.transform.localScale = Constants.Asset.Scale;
 
             var returnButton = ContentLoader.SignParent.transform.Find("Sign");

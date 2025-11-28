@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ namespace GorillaPad.Tools
 
                 BundlePositions();
 
+
                 PadLogging.LogMessage($"Initialization With {Constants.BundleName} Was Successful!");
             }
             catch (Exception e)
@@ -34,14 +36,17 @@ namespace GorillaPad.Tools
 
         public static void BundlePositions()
         {
+            // Stump:
             BundleParent = Bundle.transform.Find("Pad").gameObject;
             BundleParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
             BundleParent.transform.localScale = Constants.Asset.Scale;
+
 
             SignParent = Bundle.transform.Find("Sign").gameObject;
             SignParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
             SignParent.transform.localScale = Constants.Asset.Scale;
 
+            // Networking:
             NetworkedPad = Instantiate(BundleParent);
             NetworkedPad.name = Constants.NetworkName;
             NetworkedPad.SetActive(false);
