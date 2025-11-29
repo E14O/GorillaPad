@@ -1,5 +1,6 @@
 ﻿using System;
 using GorillaPad.Tools;
+using Photon.Pun;
 using UnityEngine;
 
 namespace GorillaPad.Functions.UI
@@ -11,6 +12,7 @@ namespace GorillaPad.Functions.UI
 
         public static PadButton Create(Transform parent, string objectName, SelectedAudio soundType, Action executeFunction)
         {
+
             GameObject obj = parent.Find(objectName).gameObject;
             if (obj == null)
             {
@@ -26,14 +28,12 @@ namespace GorillaPad.Functions.UI
 
             pbScript.OnButtonPress = executeFunction;
             pbScript.selectedSound = soundType;
-
             return pbScript;
         }
 
         public override void ButtonActivation()
         {
             base.ButtonActivation();
-            pressButtonSoundIndex = 0;
 
             AudioSource powerAudio = null;
             AudioSource buttonAudio = null;

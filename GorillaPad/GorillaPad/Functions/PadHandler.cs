@@ -97,16 +97,7 @@ namespace GorillaPad.Functions
         void ToggleMainFunction()
         {
             if (!SetPower)
-            {
-                TogglePower();
-                if (SetPower)
-                {
-                    ScreenManager.LockScreen.SetActive(false);
-                    ScreenManager.HomeScreen.SetActive(true);
-                    IsUnlocked = true;
-                }
                 return;
-            }
 
             if (AppModule.AppOpen)
             {
@@ -141,6 +132,7 @@ namespace GorillaPad.Functions
                 IsUnlocked = true;
             }
         }
+
 
         void TogglePower()
         {
@@ -184,6 +176,9 @@ namespace GorillaPad.Functions
 
         void IncreaseVolume()
         {
+            if (!SetPower)
+                return;
+
             currentVolume = Mathf.Clamp01(currentVolume + volumeStep);
             ApplyVolume();
             PadLogging.LogInfo($"Volume Increased: {Mathf.RoundToInt(currentVolume * 100)}%");
@@ -191,6 +186,9 @@ namespace GorillaPad.Functions
 
         void DecreaseVolume()
         {
+            if (!SetPower)
+                return;
+
             currentVolume = Mathf.Clamp01(currentVolume - volumeStep);
             ApplyVolume();
             PadLogging.LogInfo($"Volume Decreased: {Mathf.RoundToInt(currentVolume * 100)}%");
