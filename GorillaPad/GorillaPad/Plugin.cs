@@ -10,7 +10,7 @@ namespace GorillaPad
     {
         private void Start()
         {
-            new GameObject(Constants.Name, typeof(Main), typeof(PadNetworking), typeof(AnimationManager));
+            new GameObject(Constants.Name, typeof(PadHandler), typeof(PadNetworking), typeof(AnimationManager));
             ConfigManager.Init(Config);
 
         }

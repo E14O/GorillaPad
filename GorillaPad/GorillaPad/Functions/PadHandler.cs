@@ -9,9 +9,9 @@ using UnityEngine;
 
 namespace GorillaPad.Functions
 {
-    internal class Main : MonoBehaviour
+    internal class PadHandler : MonoBehaviour
     {
-        public static Main instance;
+        public static PadHandler instance;
         public GameObject AppInterfaces, PadColour;
 
         private bool LastState = false;

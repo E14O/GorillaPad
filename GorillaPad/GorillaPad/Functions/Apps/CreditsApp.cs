@@ -23,13 +23,13 @@ namespace GorillaPad.Functions.Apps
         {
             base.AppContent();
 
-            _pageOneObj = Main.instance.AppInterfaces.transform.Find($"{AppName}App/PageOne").gameObject;
-            _pageTwoObj = Main.instance.AppInterfaces.transform.Find($"{AppName}App/PageTwo").gameObject;
+            _pageOneObj = PadHandler.instance.AppInterfaces.transform.Find($"{AppName}App/PageOne").gameObject;
+            _pageTwoObj = PadHandler.instance.AppInterfaces.transform.Find($"{AppName}App/PageTwo").gameObject;
             _currentPage = 0;
 
             RefreshCreditsPage();
 
-            Transform parent = Main.instance.AppInterfaces.transform.Find($"{AppName}App");
+            Transform parent = PadHandler.instance.AppInterfaces.transform.Find($"{AppName}App");
             PadButton.Create(parent, "Background", SelectedAudio.ButtonAudio, ButtonClicked);
         }
 

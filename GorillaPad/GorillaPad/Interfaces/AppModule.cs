@@ -17,7 +17,7 @@ namespace GorillaPad.Interfaces
         {
             ScreenManager.HomeScreen.SetActive(false);
 
-            currentAppObject = Main.instance.AppInterfaces.transform.Find($"{AppName}App").gameObject;
+            currentAppObject = PadHandler.instance.AppInterfaces.transform.Find($"{AppName}App").gameObject;
             if (currentAppObject == null) return;
 
             if (!currentAppObject.activeSelf)
