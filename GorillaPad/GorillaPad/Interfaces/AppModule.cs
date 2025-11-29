@@ -15,7 +15,7 @@ namespace GorillaPad.Interfaces
 
         public virtual void OnAppOpen()
         {
-            ScreenManager.HomeScreen.SetActive(false);
+            GameObject fromScreen = ScreenManager.CurrentScreen;
 
             currentAppObject = PadHandler.instance.AppInterfaces.transform.Find($"{AppName}App").gameObject;
             if (currentAppObject == null) return;
@@ -23,10 +23,11 @@ namespace GorillaPad.Interfaces
             if (!currentAppObject.activeSelf)
                 currentAppObject.SetActive(true);
 
-            AnimationManager.CreateAnimation(ScreenManager.HomeScreen, currentAppObject, true);
+            AnimationManager.CreateAnimation(fromScreen, currentAppObject, true);
 
             AppOpen = true;
             currentAppModule = this;
+
             AppContent();
         }
 
@@ -41,10 +42,8 @@ namespace GorillaPad.Interfaces
             currentAppModule = null;
         }
 
-        public virtual void AppContent()
-        {
+        public virtual void AppContent() { }
 
-        }
         public virtual void Tick() { }
 
         public static void TickCurrent()

@@ -1,9 +1,8 @@
-﻿using Photon.Pun;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GorillaPad.Functions.Managers
 {
-    public class AnimationManager : MonoBehaviourPunCallbacks
+    public class AnimationManager : MonoBehaviour
     {
         private GameObject objOne;
         private GameObject objTwo;
@@ -32,6 +31,7 @@ namespace GorillaPad.Functions.Managers
             if (to != null) to.SetActive(true);
 
             manager.StartTransition(toSecond);
+
             return manager;
         }
 
@@ -57,6 +57,7 @@ namespace GorillaPad.Functions.Managers
 
             objOneCanvasGroup.interactable = false;
             objOneCanvasGroup.blocksRaycasts = false;
+
             if (objTwoCanvasGroup != null)
             {
                 objTwoCanvasGroup.interactable = false;
@@ -66,7 +67,7 @@ namespace GorillaPad.Functions.Managers
 
         private void UpdateTransition()
         {
-            if (!isTransitioning || objOneCanvasGroup == null) return;
+            if (!isTransitioning) return;
 
             float elapsed = Time.time - transitionStartTime;
             float t = Mathf.Clamp01(elapsed / transitionDuration);
@@ -92,11 +93,13 @@ namespace GorillaPad.Functions.Managers
                     objOneCanvasGroup.alpha = transitioningToTwo ? 1f : 0f;
                     objOne.transform.localScale = Vector3.one;
                     objOne.SetActive(transitioningToTwo);
+                    ScreenManager.CurrentScreen = objOne;
                 }
                 else
                 {
                     objOne.SetActive(!transitioningToTwo);
                     objTwo.SetActive(transitioningToTwo);
+
                     objOneCanvasGroup.alpha = 1f;
                     objOneCanvasGroup.interactable = true;
                     objOneCanvasGroup.blocksRaycasts = true;
@@ -104,14 +107,16 @@ namespace GorillaPad.Functions.Managers
                     objTwoCanvasGroup.alpha = 1f;
                     objTwoCanvasGroup.interactable = true;
                     objTwoCanvasGroup.blocksRaycasts = true;
+
+                    ScreenManager.CurrentScreen = transitioningToTwo ? objTwo : objOne;
                 }
             }
         }
 
-
         private void Update()
         {
-            if (isTransitioning) UpdateTransition();
+            if (isTransitioning)
+                UpdateTransition();
         }
 
         private CanvasGroup GetOrAddCanvasGroup(GameObject obj)

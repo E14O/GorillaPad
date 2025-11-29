@@ -54,17 +54,20 @@ namespace GorillaPad.Functions.Managers
                 {
                     PadToGive.transform.parent = GPRig.leftHandTransform;
                     PadToGive.transform.SetLocalPositionAndRotation(Constants.LeftHand.Position, Constants.LeftHand.Rotation);
+                    PadToGive.transform.localScale = Constants.LeftHand.Scale;
                 }
                 else
                 {
                     PadToGive.transform.parent = GPRig.rightHandTransform;
                     PadToGive.transform.SetLocalPositionAndRotation(Constants.RightHand.Position, Constants.RightHand.Rotation);
+                    PadToGive.transform.localScale = Constants.RightHand.Scale;
                 }
             }
             else
             {
                 PadToGive.transform.parent = GPRig.headMesh.transform.parent;
                 PadToGive.transform.SetLocalPositionAndRotation(Constants.Chest.Position, Constants.Chest.Rotation);
+                PadToGive.transform.localScale = Constants.Chest.Scale;
             }
 
             GorillaPads.Add(PadToGive);
@@ -105,6 +108,7 @@ namespace GorillaPad.Functions.Managers
                     {
                         PadObj.transform.parent = rig.leftHandTransform;
                         PadObj.transform.SetLocalPositionAndRotation(Constants.LeftHand.Position, Constants.LeftHand.Rotation);
+                        PadObj.transform.localScale = Constants.LeftHand.Scale;
                     }
                 }
                 else
@@ -113,6 +117,7 @@ namespace GorillaPad.Functions.Managers
                     {
                         PadObj.transform.parent = rig.rightHandTransform;
                         PadObj.transform.SetLocalPositionAndRotation(Constants.RightHand.Position, Constants.RightHand.Rotation);
+                        PadObj.transform.localScale = Constants.RightHand.Scale;
                     }
                 }
             }
@@ -122,6 +127,7 @@ namespace GorillaPad.Functions.Managers
                 {
                     PadObj.transform.parent = rig.headMesh.transform.parent;
                     PadObj.transform.SetLocalPositionAndRotation(Constants.Chest.Position, Constants.Chest.Rotation);
+                    PadObj.transform.localScale = Constants.Chest.Scale;
                 }
             }
         }

@@ -17,6 +17,7 @@ namespace GorillaPad.Functions
         private bool LastState = false;
         private bool IsUnlocked = false;
         private bool SetPower = false;
+        private bool IsReturning = false;
 
         private float currentVolume = 0.5f;
         private const float volumeStep = 0.1f;
@@ -76,6 +77,13 @@ namespace GorillaPad.Functions
                 AppModule.OnAppClose();
 
             LastState = AppModule.AppOpen;
+
+            var distance = Vector3.Distance(ContentLoader.BundleParent.transform.position, ContentLoader.SignParent.transform.position);
+            if (distance <= .2f && PadHolding.LetGo == true && !IsReturning)
+            {
+                IsReturning = true;
+                StartCoroutine(ReturnRoutine());
+            }
 
             if (ContentLoader.BundleLoaded)
             {
@@ -161,7 +169,7 @@ namespace GorillaPad.Functions
                 if (instance != null && instance.isActiveAndEnabled)
                     instance.StartCoroutine(instance.PlayLockScreenAnimation());
                 else
-                    Debug.LogError("Main instance not available to run coroutine");
+                    PadLogging.LogError("Pad Handler: Error starting to Start Coroutine");
 
                 IsUnlocked = false;
                 SetPower = true;
@@ -223,9 +231,9 @@ namespace GorillaPad.Functions
             pad.transform.rotation = Constants.Asset.Rotation;
             pad.transform.localScale = Constants.Asset.Scale;
 
-            var returnButton = ContentLoader.SignParent.transform.Find("Sign");
-            if (returnButton)
-                returnButton.GetComponent<PadButton>().Destroy();
+            PadHolding.LetGo = false;
+            IsReturning = false;
         }
+
     }
 }

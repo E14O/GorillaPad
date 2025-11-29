@@ -12,9 +12,10 @@ public enum GrabState { Mounted, InHand }
 
 public class PadHolding : HoldableObject
 {
-    public bool InHand, InLeftHand;
+    public static bool InHand, InLeftHand;
     public bool PickUp = true;
     public float GrabDistance = 0.23f;
+    public static bool LetGo = false;
 
     public GrabState State { get; set; }
     public float InterpTime { get; set; }
@@ -35,6 +36,7 @@ public class PadHolding : HoldableObject
 
     void Grab(bool left)
     {
+        LetGo = false;
         transform.SetParent(null, true);
 
         Vector3 scale = new(.08f, .08f, .08f);
@@ -51,29 +53,11 @@ public class PadHolding : HoldableObject
 
         InHand = true;
         InLeftHand = left;
-
-        StartCoroutine(AddReturnScript());
-
-        if (ContentLoader.SignParent.transform.Find("Sign").GetComponent<PadButton>() == null)
-        {
-            PadButton.Create(ContentLoader.SignParent.transform, "Sign", SelectedAudio.ButtonAudio, PadHandler.ReturnPad);
-        }
-    }
-
-    private IEnumerator AddReturnScript()
-    {
-        yield return new WaitForSeconds(5f);
-
-        Transform sign = ContentLoader.SignParent.transform.Find("Sign");
-
-        if (sign != null && sign.GetComponent<PadButton>() == null)
-        {
-            PadButton.Create(sign, "Sign", SelectedAudio.ButtonAudio, PadHandler.ReturnPad);
-        }
     }
 
     void Drop()
     {
+        LetGo = true;
         InterpTime = 0f;
         State = GrabState.Mounted;
         StartPos = transform.position;
