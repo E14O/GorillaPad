@@ -56,7 +56,7 @@ public class PadHolding : HoldableObject
 
         if (ContentLoader.SignParent.transform.Find("Sign").GetComponent<PadButton>() == null)
         {
-            PadButton.Create(ContentLoader.SignParent.transform, "Sign", SelectedAudio.ButtonAudio, Main.ReturnPad);
+            PadButton.Create(ContentLoader.SignParent.transform, "Sign", SelectedAudio.ButtonAudio, PadHandler.ReturnPad);
         }
     }
 
@@ -68,7 +68,7 @@ public class PadHolding : HoldableObject
 
         if (sign != null && sign.GetComponent<PadButton>() == null)
         {
-            PadButton.Create(sign, "Sign", SelectedAudio.ButtonAudio, Main.ReturnPad);
+            PadButton.Create(sign, "Sign", SelectedAudio.ButtonAudio, PadHandler.ReturnPad);
         }
     }
 
