@@ -45,10 +45,9 @@ namespace GorillaPad.Interfaces
 
             foreach (string App in AppPath)
             {
-                AssetBundle assetBundle = AssetBundle.LoadFromFile(App);
                 string Bundle = Path.GetFileNameWithoutExtension(App);
 
-                GameObject CustomApp = Instantiate(assetBundle.LoadAsset<GameObject>(Bundle));
+                GameObject CustomApp = Instantiate(AssetBundle.LoadFromFile(App).LoadAsset<GameObject>(Bundle));
                 GameObject AppIcon = CustomApp.transform.Find($"{Bundle}Icon").gameObject;
                 GameObject AppScreen = CustomApp.transform.Find($"{Bundle}App").gameObject;
                 GameObject AppText = AppParent.transform.Find("CreditsIcon/Text").gameObject;
@@ -63,8 +62,8 @@ namespace GorillaPad.Interfaces
                 NewText.transform.SetParent(AppIcon.transform, false);
                 var TextToChange = NewText.GetComponent<Text>();
 
-                var matchedApp = Apps.FirstOrDefault(app => app.GetType().Name == Bundle);
-                TextToChange.text = matchedApp != null ? matchedApp.AppName : Bundle;
+                var MatchedApp = Apps.FirstOrDefault(app => app.GetType().Name == Bundle);
+                TextToChange.text = MatchedApp != null ? MatchedApp.AppName : Bundle;
 
                 AppIcon.transform.SetParent(AppParent.transform, false);
                 AppIcon.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
@@ -87,15 +86,14 @@ namespace GorillaPad.Interfaces
                     Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
                     PadButton.Create(parent, $"{App.AppName}Icon", SelectedAudio.ButtonAudio, App.OnAppOpen);
 
-                    var foundPrefab = ScreenParent.transform.Find($"{App.AppName}App");
-                    if (foundPrefab != null && !AppParents.ContainsKey(App.AppName))
+                    if (ScreenParent.transform.Find($"{App.AppName}App") != null && !AppParents.ContainsKey(App.AppName))
                     {
-                        AppParents.Add(App.AppName, foundPrefab.gameObject);
-                        PadLogging.LogMessage($"Set-up: {App.AppName} prefab in AppParents!");
+                        AppParents.Add(App.AppName, ScreenParent.transform.Find($"{App.AppName}App").gameObject);
+                        PadLogging.LogMessage($"{App.AppName} bundle located in app parent!");
                     }
                     else
                     {
-                        PadLogging.LogWarning($"Could not find prefab for {App.AppName}");
+                        PadLogging.LogWarning($"Could not find bundle for {App.AppName}");
                     }
                 }
             }
