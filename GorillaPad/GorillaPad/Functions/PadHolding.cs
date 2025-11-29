@@ -37,7 +37,7 @@ public class PadHolding : HoldableObject
     {
         transform.SetParent(null, true);
 
-        Vector3 scale = new(0.098f, 0.098f, 0.098f);
+        Vector3 scale = new(.08f, .08f, .08f);
         transform.localScale = scale;
         if (padModel) padModel.localScale = scale;
         InterpTime = 0f;
@@ -138,7 +138,7 @@ public class PadHolding : HoldableObject
                             transform.SetParent(parent, false);
                             transform.localPosition = pos;
                             transform.localRotation = rot;
-                            Vector3 scale = new(0.098f, 0.098f, 0.098f);
+                            Vector3 scale = new(.08f, .08f, .08f);
                             transform.localScale = scale;
                             if (padModel) padModel.localScale = scale;
                         }

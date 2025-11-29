@@ -12,7 +12,6 @@ namespace GorillaPad
         {
             new GameObject(Constants.Name, typeof(PadHandler), typeof(PadNetworking), typeof(AnimationManager));
             ConfigManager.Init(Config);
-
         }
     }
 }

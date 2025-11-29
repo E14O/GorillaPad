@@ -19,14 +19,12 @@ namespace GorillaPad.Tools
             {
                 if (Bundle != null) return;
 
-                AssetBundle assetBundle = InitialiseBundle(Constants.BundlePath);
-                Bundle = Instantiate(assetBundle.LoadAsset<GameObject>(Constants.BundleName));
-                BundleLoaded = true;
+                Bundle = Instantiate(InitialiseBundle(Constants.BundlePath).LoadAsset<GameObject>(Constants.BundleName));
 
                 BundlePositions();
 
-
-                PadLogging.LogMessage($"Initialization With {Constants.BundleName} Was Successful!");
+                BundleLoaded = true;
+                PadLogging.LogInfo($"Initialization With {Constants.BundleName} Was Successful!");
             }
             catch (Exception e)
             {
@@ -40,7 +38,6 @@ namespace GorillaPad.Tools
             BundleParent = Bundle.transform.Find("Pad").gameObject;
             BundleParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
             BundleParent.transform.localScale = Constants.Asset.Scale;
-
 
             SignParent = Bundle.transform.Find("Sign").gameObject;
             SignParent.transform.SetPositionAndRotation(Constants.Asset.Position, Constants.Asset.Rotation);
