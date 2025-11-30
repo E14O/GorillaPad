@@ -58,6 +58,7 @@ namespace GorillaPad.Functions
             ContentLoader.BundleParent.AddComponent<ScreenManager>();
             ContentLoader.BundleParent.AddComponent<PadHolding>();
             ContentLoader.BundleParent.AddComponent<AppCreation>();
+            ContentLoader.BundleParent.AddComponent<NotificationManager>();
 
             AppInterfaces = ContentLoader.BundleParent.transform.Find("Canvas/AppInterfaces").gameObject;
             PadColour = ContentLoader.BundleParent.transform.Find("Model").gameObject;
@@ -152,12 +153,14 @@ namespace GorillaPad.Functions
 
                 IsUnlocked = false;
                 SetPower = false;
+
             }
             else
             {
                 ScreenManager.TopBar.SetActive(true);
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.LockScreen.SetActive(true);
+                NotificationManager.SendNotification("GorillaPad", "Hello!");
 
                 if (instance != null && instance.isActiveAndEnabled)
                     instance.StartCoroutine(instance.PlayLockScreenAnimation());

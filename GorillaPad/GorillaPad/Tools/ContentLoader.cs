@@ -56,7 +56,8 @@ namespace GorillaPad.Tools
                 Transform SoundParent = BundleParent.transform.GetChild(2);
                 PowerAudio = SoundParent.transform.Find("SecondaryButton").gameObject.GetComponent<AudioSource>();
                 ButtonAudio = SoundParent.transform.Find("PrimaryButton").gameObject.GetComponent<AudioSource>();
-                BuzzAudio = SoundParent.transform.Find("NotificationAudio").gameObject.GetComponent<AudioSource>();
+                // BuzzAudio = SoundParent.transform.Find("NotificationAudio").gameObject.GetComponent<AudioSource>();
+                BuzzAudio = null;
 
                 if (!SoundsLoaded)
                 {
