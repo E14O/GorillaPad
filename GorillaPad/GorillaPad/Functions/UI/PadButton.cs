@@ -45,6 +45,7 @@ namespace GorillaPad.Functions.UI
             else if (selectedSound == SelectedAudio.ButtonAudio)
                 buttonAudio.Play();
 
+            pressButtonSoundIndex = 0;
             OnButtonPress.Invoke();
         }
     }
