@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace GorillaPad.Functions.Apps
 {
-    internal class SettingsApp : AppModule
+    internal class ConfigurationApp : AppModule
     {
-        public override string AppName => "Settings";
+        public override string AppName => "Configuration";
         public override string AppVersion => "0.0.1";
 
         public override void OnAppOpen()

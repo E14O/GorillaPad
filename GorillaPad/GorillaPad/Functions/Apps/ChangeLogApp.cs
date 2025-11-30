@@ -5,10 +5,10 @@ using GorillaPad.Interfaces;
 
 namespace GorillaPad.Functions.Apps
 {
-    internal class UpdateApp : AppModule
+    internal class ChangeLogApp : AppModule
     {
         // soon to be added
-        public override string AppName => "Update";
+        public override string AppName => "ChangeLog";
         public override string AppVersion => "0.0.1";
     }
 }

@@ -22,7 +22,7 @@ namespace GorillaPad.Functions.Managers
             AudioSource BuzzAudio = null;
             AudioSource PowerAudioNull = null;
             AudioSource ButtonAudioNull = null;
-            ContentLoader.GetSounds(ref, PowerAudioNull, ref ButtonAudioNull, ref BuzzAudio);
+            ContentLoader.GetSounds(ref PowerAudioNull, ref ButtonAudioNull, ref BuzzAudio);
 
             if (Audio == NotifAudio.BuzzAudio)
                 BuzzAudio.Play();

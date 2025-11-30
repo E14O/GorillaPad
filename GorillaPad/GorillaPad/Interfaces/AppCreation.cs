@@ -50,7 +50,7 @@ namespace GorillaPad.Interfaces
                 GameObject CustomApp = Instantiate(AssetBundle.LoadFromFile(App).LoadAsset<GameObject>(Bundle));
                 GameObject AppIcon = CustomApp.transform.Find($"{Bundle}Icon").gameObject;
                 GameObject AppScreen = CustomApp.transform.Find($"{Bundle}App").gameObject;
-                GameObject AppText = AppParent.transform.Find("CreditsIcon/Text").gameObject;
+                GameObject AppText = AppParent.transform.Find("AttributionsIcon/Text").gameObject;
 
                 if (AppIcon == null || AppScreen == null || AppText == null)
                 {
@@ -102,11 +102,11 @@ namespace GorillaPad.Interfaces
         public void CreateDefaultApps()
         {
             Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
-            var CreditsApp = Apps.FirstOrDefault(creditsapp => creditsapp is CreditsApp);
-            PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsApp.OnAppOpen);
+            var CreditsApp = Apps.FirstOrDefault(creditsapp => creditsapp is AttributionsApp);
+            PadButton.Create(parent, "AttributionsIcon", SelectedAudio.ButtonAudio, CreditsApp.OnAppOpen);
 
-            var SettingsApp = Apps.FirstOrDefault(settapp => settapp is SettingsApp);
-            PadButton.Create(parent, "SettingsIcon", SelectedAudio.ButtonAudio, SettingsApp.OnAppOpen);
+            var SettingsApp = Apps.FirstOrDefault(settapp => settapp is ConfigurationApp);
+            PadButton.Create(parent, "ConfigurationIcon", SelectedAudio.ButtonAudio, SettingsApp.OnAppOpen);
         }
     }
 }
