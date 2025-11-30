@@ -13,7 +13,7 @@ namespace GorillaPad.Functions.Managers
         private bool isTransitioning = false;
         private bool transitioningToTwo = false;
         private float transitionStartTime = 0f;
-        private float transitionDuration = 0.07f;
+        private float transitionDuration = 0.15f;
 
         public static AnimationManager CreateAnimation(GameObject from, GameObject to, bool toSecond)
         {

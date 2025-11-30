@@ -49,12 +49,14 @@ namespace GorillaPad.Tools
             NetworkedPad.SetActive(false);
         }
 
-        public static void GetSounds(ref AudioSource PowerAudio, ref AudioSource ButtonAudio)
+        public static void GetSounds(ref AudioSource PowerAudio, ref AudioSource ButtonAudio, ref AudioSource BuzzAudio)
         {
             try
             {
-                PowerAudio = BundleParent.transform.GetChild(2).transform.Find("SecondaryButton").gameObject.GetComponent<AudioSource>();
-                ButtonAudio = BundleParent.transform.GetChild(2).transform.Find("PrimaryButton").gameObject.GetComponent<AudioSource>();
+                Transform SoundParent = BundleParent.transform.GetChild(2);
+                PowerAudio = SoundParent.transform.Find("SecondaryButton").gameObject.GetComponent<AudioSource>();
+                ButtonAudio = SoundParent.transform.Find("PrimaryButton").gameObject.GetComponent<AudioSource>();
+                BuzzAudio = SoundParent.transform.Find("NotificationAudio").gameObject.GetComponent<AudioSource>();
 
                 if (!SoundsLoaded)
                 {

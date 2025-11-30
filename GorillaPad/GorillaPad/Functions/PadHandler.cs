@@ -24,6 +24,7 @@ namespace GorillaPad.Functions
 
         private AudioSource powerAudio;
         private AudioSource buttonAudio;
+        private AudioSource BuzzAudio;
 
         void Start()
         {
@@ -61,7 +62,7 @@ namespace GorillaPad.Functions
             AppInterfaces = ContentLoader.BundleParent.transform.Find("Canvas/AppInterfaces").gameObject;
             PadColour = ContentLoader.BundleParent.transform.Find("Model").gameObject;
 
-            ContentLoader.GetSounds(ref powerAudio, ref buttonAudio);
+            ContentLoader.GetSounds(ref powerAudio, ref buttonAudio, ref BuzzAudio);
             ApplyVolume();
 
             Transform parent = ContentLoader.BundleParent.transform.GetChild(1);

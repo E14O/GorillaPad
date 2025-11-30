@@ -37,7 +37,8 @@ namespace GorillaPad.Functions.UI
 
             AudioSource powerAudio = null;
             AudioSource buttonAudio = null;
-            ContentLoader.GetSounds(ref powerAudio, ref buttonAudio);
+            AudioSource BuzzAudio = null;
+            ContentLoader.GetSounds(ref powerAudio, ref buttonAudio, ref BuzzAudio);
 
             if (selectedSound == SelectedAudio.PowerAudio)
                 powerAudio.Play();
