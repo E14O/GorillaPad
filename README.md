@@ -1,8 +1,8 @@
-# GorillaPad!
-GorillaPad is a GorillaTag Mod Made By E14O & H4RNS, past developers include Wryser, NotABird, Striker67, Ty, Cyn Who Helped Develop The Older Versions Of GorillaPad, We Also Have Spanky Who Is Helping Develop Some Apps.
+# Gorilla Pad!
+Gorilla Pad is a GorillaTag Mod Made By E14O & H4RNS, past developers include Wryser, NotABird, Striker67, Ty, Cyn Who Helped Develop The Older Versions Of GorillaPad, We Also Have Spanky Who Is Helping Develop Some Apps.
 
 ## Q&A
-How Do I Install GorillaPad?
+How Do I Install Gorilla Pad?
 - To Install Gorilla Pad, Click On The `Releases` Channel And Download The .Zip Extract The Files And Place The Whole UnZipped Folder Into Your `Plugins`.
 
 How Do I Make Custom Apps?
