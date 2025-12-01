@@ -49,6 +49,7 @@ public class PadHolding : HoldableObject
         ExitGames.Client.Photon.Hashtable hash = new();
         ExtensionMethods.AddOrUpdate(hash, "GPHolding", true);
         ExtensionMethods.AddOrUpdate(hash, "GPIsLeft", left);
+        ExtensionMethods.AddOrUpdate(hash, "GPMounted", false);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 
         InHand = true;

@@ -35,16 +35,18 @@ namespace GorillaPad.Functions.Managers
 
         private IEnumerator GiveGorillaPad(Player _Player)
         {
+            VRRig GPRig = null;
             yield return new WaitForSeconds(4f);
 
             var GPlayerName = _Player.NickName;
-            VRRig GPRig = GorillaGameManager.StaticFindRigForPlayer(_Player);
             GameObject PadToGive = Instantiate(ContentLoader.NetworkedPad);
             PadToGive.SetActive(true);
             PadToGive.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
             PadToGive.name = $"{GPlayerName}`s Pad";
+            PadLogging.LogInfo($"Given Gorilla Pad To: {GPlayerName}");
 
             bool HoldingGP = !(bool)_Player.CustomProperties["GPHolding"];
+            bool MountedGP = !(bool)_Player.CustomProperties["GPMounted"];
             if (HoldingGP)
             {
                 PadToGive.transform.localScale = Constants.Chest.Scale;
@@ -53,23 +55,30 @@ namespace GorillaPad.Functions.Managers
                 if (IsLeft)
                 {
                     PadToGive.transform.parent = GPRig.leftHandTransform;
+                    PadToGive.transform.localScale = Vector3.one;
                     PadToGive.transform.SetLocalPositionAndRotation(Constants.LeftHand.Position, Constants.LeftHand.Rotation);
                     PadToGive.transform.localScale = Constants.LeftHand.Scale;
                 }
                 else
                 {
                     PadToGive.transform.parent = GPRig.rightHandTransform;
+                    PadToGive.transform.localScale = Vector3.one;
                     PadToGive.transform.SetLocalPositionAndRotation(Constants.RightHand.Position, Constants.RightHand.Rotation);
                     PadToGive.transform.localScale = Constants.RightHand.Scale;
                 }
             }
+            else if(MountedGP)
+            {
+                PadToGive.transform.parent = null;
+                PadToGive.transform.localPosition = Vector3.zero;
+            }
             else
             {
                 PadToGive.transform.parent = GPRig.headMesh.transform.parent;
+                PadToGive.transform.localScale = Vector3.one;
                 PadToGive.transform.SetLocalPositionAndRotation(Constants.Chest.Position, Constants.Chest.Rotation);
                 PadToGive.transform.localScale = Constants.Chest.Scale;
             }
-
             GorillaPads.Add(PadToGive);
             NetworkedPlayers[PadToGive] = _Player;
         }
@@ -97,6 +106,7 @@ namespace GorillaPad.Functions.Managers
 
             bool HoldingGP = (bool)targetPlayer.CustomProperties["GPHolding"];
             bool IsLeft = (bool)targetPlayer.CustomProperties["GPIsLeft"];
+            bool MountedGP = !(bool)targetPlayer.CustomProperties["GPMounted"];
 
             if (HoldingGP)
             {
@@ -107,6 +117,7 @@ namespace GorillaPad.Functions.Managers
                     if (rig.leftHandTransform != null)
                     {
                         PadObj.transform.parent = rig.leftHandTransform;
+                        PadObj.transform.localScale = Vector3.one;
                         PadObj.transform.SetLocalPositionAndRotation(Constants.LeftHand.Position, Constants.LeftHand.Rotation);
                         PadObj.transform.localScale = Constants.LeftHand.Scale;
                     }
@@ -116,16 +127,23 @@ namespace GorillaPad.Functions.Managers
                     if (rig.rightHandTransform != null)
                     {
                         PadObj.transform.parent = rig.rightHandTransform;
+                        PadObj.transform.localScale = Vector3.one;
                         PadObj.transform.SetLocalPositionAndRotation(Constants.RightHand.Position, Constants.RightHand.Rotation);
                         PadObj.transform.localScale = Constants.RightHand.Scale;
                     }
                 }
+            }
+            else if (MountedGP)
+            {
+                PadObj.transform.parent = null;
+                PadObj.transform.localPosition = Vector3.zero;
             }
             else
             {
                 if (rig.headMesh != null)
                 {
                     PadObj.transform.parent = rig.headMesh.transform.parent;
+                    PadObj.transform.localScale = Vector3.one;
                     PadObj.transform.SetLocalPositionAndRotation(Constants.Chest.Position, Constants.Chest.Rotation);
                     PadObj.transform.localScale = Constants.Chest.Scale;
                 }
@@ -161,19 +179,22 @@ namespace GorillaPad.Functions.Managers
             GorillaPads.Clear();
             NetworkedPlayers.Clear();
         }
-
         void Update()
         {
             foreach (var Pad in GorillaPads)
             {
-                GameObject PadModel = Pad.transform.Find("Model").gameObject;
+                var model = Pad.transform.Find("Model");
+                if (model == null)
+                    continue;
+
                 if (NetworkedPlayers.TryGetValue(Pad, out Player NetPlayer))
                 {
                     var NetRig = GorillaGameManager.StaticFindRigForPlayer(NetPlayer);
                     if (NetRig != null && NetRig.mainSkin != null)
-                        PadModel.GetComponent<MeshRenderer>().material.color = NetRig.playerColor;
+                        model.GetComponent<MeshRenderer>().material.color = NetRig.playerColor;
                 }
             }
         }
+
     }
 }

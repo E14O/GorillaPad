@@ -1,10 +1,11 @@
-﻿using GorillaPad.Functions.Managers;
+﻿using System;
+using System.Collections;
+using GorillaNetworking;
+using GorillaPad.Functions.Managers;
 using GorillaPad.Functions.UI;
 using GorillaPad.Interfaces;
 using GorillaPad.Tools;
 using Photon.Pun;
-using System;
-using System.Collections;
 using UnityEngine;
 
 namespace GorillaPad.Functions
@@ -47,7 +48,9 @@ namespace GorillaPad.Functions
             ContentLoader.InitialiseContent();
             try
             {
-                PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { Constants.CustomProp, Constants.Version } });
+                var CustomProps = new ExitGames.Client.Photon.Hashtable{{ "GPHolding", false },{ "GPIsLeft", false },{ "GPMounted", true }, {Constants.CustomProp, Constants.Version } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(CustomProps);
+
             }
             catch (Exception e)
             {
@@ -206,6 +209,10 @@ namespace GorillaPad.Functions
 
         public static void ReturnPad()
         {
+            ExitGames.Client.Photon.Hashtable hash = new();
+            ExtensionMethods.AddOrUpdate(hash, "GPMounted", true);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
             if (instance != null)
                 instance.StartCoroutine(instance.ReturnRoutine());
         }
