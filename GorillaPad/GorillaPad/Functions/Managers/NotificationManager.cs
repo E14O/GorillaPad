@@ -14,8 +14,8 @@ namespace GorillaPad.Functions.Managers
 
         void Start()
         {
-            NotificationLockScreen = ContentLoader.BundleParent.transform.GetChild(1).GetChild(5).transform.Find("Notification").gameObject;
-            LockScreen = ContentLoader.BundleParent.transform.GetChild(1).GetChild(5).gameObject;
+            NotificationLockScreen = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid/Notification").gameObject;
+            LockScreen = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid").gameObject;
             NotificationLockScreen.SetActive(false);
         }
 

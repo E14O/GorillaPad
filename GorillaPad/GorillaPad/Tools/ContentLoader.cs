@@ -61,7 +61,7 @@ namespace GorillaPad.Tools
 
                 if (!SoundsLoaded)
                 {
-                    PadLogging.LogMessage("Successfully Loaded AudioSources!");
+                    PadLogging.LogMessage("Initialization With AudioSources was Successful!");
                     SoundsLoaded = true;
                 }
             }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace GorillaPad.Functions.Apps
 {
-    internal class AttributionsApp : AppModule
+    internal class Credits : AppModule
     {
-        public override string AppName => "Attributions";
+        public override string AppName => "Credits";
         public override string AppVersion => "0.0.1";
 
         private int _currentPage;
