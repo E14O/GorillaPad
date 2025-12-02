@@ -1,4 +1,7 @@
 # Gorilla Pad!
+
+<img width="1919" height="1015" alt="image" src="https://github.com/user-attachments/assets/d52e64bd-fa81-4b70-9507-4d60cd41c4fc" />
+
 Gorilla Pad is a GorillaTag Mod Made By E14O & H4RNS, past developers include Wryser, NotABird, Striker67, Ty, Cyn Who Helped Develop The Older Versions Of GorillaPad, We Also Have Spanky Who Is Helping Develop Some Apps.
 
 ## Q&A
