@@ -163,7 +163,7 @@ namespace GorillaPad.Functions
                 ScreenManager.TopBar.SetActive(true);
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.LockScreen.SetActive(true);
-                NotificationManager.SendNotification("GorillaPad", "Hello!");
+              
 
                 if (instance != null && instance.isActiveAndEnabled)
                     instance.StartCoroutine(instance.PlayLockScreenAnimation());

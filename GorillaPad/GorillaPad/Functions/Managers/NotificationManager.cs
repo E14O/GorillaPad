@@ -1,8 +1,11 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using GorillaPad.Tools;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
+using GFriends = GorillaFriends.Main;
 
 namespace GorillaPad.Functions.Managers
 {
@@ -11,12 +14,75 @@ namespace GorillaPad.Functions.Managers
         private NotifAudio Audio;
         public static GameObject NotificationLockScreen, LockScreen;
         private int NotifAmountLockScreen = 0;
+        private static Dictionary<GameObject, float> NotificationTimes = new Dictionary<GameObject, float>();
+        private static NotificationManager instance;
 
         void Start()
         {
             NotificationLockScreen = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid/Notification").gameObject;
             LockScreen = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid").gameObject;
             NotificationLockScreen.SetActive(false);
+            instance = this;
+            StartCoroutine(UpdateNotificationTimes());
+        }
+
+        private IEnumerator UpdateNotificationTimes()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(1f);
+                UpdateAllNotificationTimes();
+            }
+        }
+
+        private static void UpdateAllNotificationTimes()
+        {
+            var notificationsToRemove = new List<GameObject>();
+
+            foreach (var kvp in NotificationTimes)
+            {
+                if (kvp.Key == null)
+                {
+                    notificationsToRemove.Add(kvp.Key);
+                    continue;
+                }
+
+                float elapsedSeconds = Time.time - kvp.Value;
+                int seconds = Mathf.FloorToInt(elapsedSeconds);
+                
+
+                Text timeText = kvp.Key.transform.GetChild(2).GetComponent<Text>();
+                if (timeText != null)
+                {
+                    timeText.text = $"{seconds}s ago";
+                   
+                }
+            }
+
+            foreach (var notif in notificationsToRemove)
+            {
+                NotificationTimes.Remove(notif);
+            }
+        }
+
+        public override void OnJoinedRoom()
+        {
+            SendNotification("RoomInfo", "You have joined a room");
+        }
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            base.OnPlayerEnteredRoom(newPlayer);
+            bool isFriend = GFriends.IsFriend(newPlayer.UserId);
+            string message = isFriend 
+                ? $"your friend \"{newPlayer.NickName}\" has joined the room"
+                : $"{newPlayer.NickName} has joined the room";
+            SendNotification("RoomInfo", message);
+        }
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            base.OnPlayerLeftRoom(otherPlayer);
+            
+            SendNotification("RoomInfo", $"{otherPlayer.NickName} has left the room");
         }
 
         public static void SendNotification(string Title, string Message)
@@ -26,14 +92,16 @@ namespace GorillaPad.Functions.Managers
                Play Animation & play a sound.
                Send All Information To InboxApp */
 
-            
+
 
             var NewNotif = Instantiate(NotificationLockScreen, NotificationLockScreen.transform.parent);
             NewNotif.transform.SetParent(LockScreen.transform, false);
             NewNotif.transform.GetChild(0).GetComponent<Text>().text = Title;
             NewNotif.transform.GetChild(1).GetComponent<Text>().text = Message;
 
-            NewNotif.transform.GetChild(2).GetComponent<Text>().text = $"{System.DateTime.Now}";
+            float creationTime = Time.time;
+            NotificationTimes[NewNotif] = creationTime;
+            NewNotif.transform.GetChild(2).GetComponent<Text>().text = "0s ago";
             NewNotif.SetActive(true);
 
 
