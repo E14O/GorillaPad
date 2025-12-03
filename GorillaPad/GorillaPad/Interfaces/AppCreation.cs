@@ -6,19 +6,22 @@ using System.Reflection;
 using GorillaPad.Functions.Apps;
 using GorillaPad.Functions.UI;
 using GorillaPad.Tools;
-using PlayFab.AuthenticationModels;
 using UnityEngine;
 using UnityEngine.UI;
-using Viveport;
 
 namespace GorillaPad.Interfaces
 {
     public class AppCreation : MonoBehaviour
     {
-        private readonly List<AppModule> Apps = new();
+        public static GameObject AppParent;
+        public static GameObject ScreenParent;
+
         public static Dictionary<string, GameObject> AppParents = new Dictionary<string, GameObject>();
-        public static GameObject AppParent, ScreenParent;
+
+        private readonly List<AppModule> Apps = new();
+
         private readonly string FolderPathApps = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Apps");
+
         private readonly string FolderPathDLL = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "MainApp");
 
         public void Start()
@@ -36,8 +39,8 @@ namespace GorillaPad.Interfaces
             foreach (var type in appTypes)
                 Apps.Add((AppModule)Activator.CreateInstance(type));
 
-            CreateApplication();
             CreateDefaultApps();
+            CreateApplication();
         }
 
         public void CreateApplication()
@@ -104,13 +107,14 @@ namespace GorillaPad.Interfaces
         public void CreateDefaultApps()
         {
             Transform parent = ContentLoader.Bundle.transform.GetChild(0).GetChild(1).GetChild(6).GetChild(1);
-            var CreditsApp = Apps.FirstOrDefault(creditsapp => creditsapp is Credits);
-            PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsApp.OnAppOpen);
-            PadLogging.LogInfo($"Registered Application: Credits");
 
             var SettingsApp = Apps.FirstOrDefault(settapp => settapp is ConfigurationApp);
             PadButton.Create(parent, "ConfigurationIcon", SelectedAudio.ButtonAudio, SettingsApp.OnAppOpen);
             PadLogging.LogInfo($"Registered Application: Configuration");
+
+            var CreditsApp = Apps.FirstOrDefault(creditsapp => creditsapp is Credits);
+            PadButton.Create(parent, "CreditsIcon", SelectedAudio.ButtonAudio, CreditsApp.OnAppOpen);
+            PadLogging.LogInfo($"Registered Application: Credits");
         }
     }
 }

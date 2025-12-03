@@ -1,6 +1,10 @@
+<<<<<<< HEAD
+﻿using GorillaPad.Tools;
+=======
 ﻿using System.Collections;
 using System.Collections.Generic;
 using GorillaPad.Tools;
+>>>>>>> d103f4148e0d4d982d65683d411666112ee83846
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -11,6 +15,19 @@ namespace GorillaPad.Functions.Managers
 {
     public class NotificationManager : MonoBehaviourPunCallbacks
     {
+<<<<<<< HEAD
+        public static GameObject TemporaryNotification { get; private set; }
+        public static GameObject LockScreenGrid { get; private set; }
+
+        private int NotificationCount = 0;
+
+        void Start()
+        {
+            TemporaryNotification = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid/Notification").gameObject;
+            LockScreenGrid = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid").gameObject;
+
+            TemporaryNotification.SetActive(false);
+=======
         private NotifAudio Audio;
         public static GameObject NotificationLockScreen, LockScreen;
         private int NotifAmountLockScreen = 0;
@@ -83,41 +100,54 @@ namespace GorillaPad.Functions.Managers
             base.OnPlayerLeftRoom(otherPlayer);
             
             SendNotification("RoomInfo", $"{otherPlayer.NickName} has left the room");
+<<<<<<< Updated upstream
+=======
+>>>>>>> d103f4148e0d4d982d65683d411666112ee83846
+>>>>>>> Stashed changes
         }
 
         public static void SendNotification(string Title, string Message)
         {
-            /* Set a max cap to the title and if over put "..." same with message, full message and title displayed in inbox app.
-               Set TitleText and Message Text.
-               Play Animation & play a sound.
-               Send All Information To InboxApp */
+            var Notification = Instantiate(TemporaryNotification, LockScreenGrid.transform, false);
+            Notification.transform.SetSiblingIndex(0);
 
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< HEAD
+            Notification.transform.GetChild(0).GetComponent<Text>().text = Title;
+            Notification.transform.GetChild(1).GetComponent<Text>().text = Message;
+=======
+>>>>>>> Stashed changes
 
-            var NewNotif = Instantiate(NotificationLockScreen, NotificationLockScreen.transform.parent);
-            NewNotif.transform.SetParent(LockScreen.transform, false);
-            NewNotif.transform.GetChild(0).GetComponent<Text>().text = Title;
-            NewNotif.transform.GetChild(1).GetComponent<Text>().text = Message;
+>>>>>>> d103f4148e0d4d982d65683d411666112ee83846
 
+<<<<<<< Updated upstream
+=======
+            Notification.transform.GetChild(2).GetComponent<Text>().text = $"{System.DateTime.Now}";
+            Notification.SetActive(true);
+
+<<<<<<< HEAD
+            PadLogging.LogInfo($"Received Notification: {Title}, {Message}");
+=======
+>>>>>>> Stashed changes
             float creationTime = Time.time;
             NotificationTimes[NewNotif] = creationTime;
             NewNotif.transform.GetChild(2).GetComponent<Text>().text = "0s ago";
             NewNotif.SetActive(true);
+>>>>>>> d103f4148e0d4d982d65683d411666112ee83846
 
+           /* AudioSource BuzzAudio = null;
+              AudioSource PowerAudioNull = null;
+              AudioSource ButtonAudioNull = null;
 
+              ContentLoader.GetSounds(ref PowerAudioNull, ref ButtonAudioNull, ref BuzzAudio);
+              BuzzAudio.Play();
 
-            /* AudioSource BuzzAudio = null;
-            AudioSource PowerAudioNull = null;
-            AudioSource ButtonAudioNull = null;
-            ContentLoader.GetSounds(ref PowerAudioNull, ref ButtonAudioNull, ref BuzzAudio);
-
-            if (Audio == NotifAudio.BuzzAudio)
-                BuzzAudio.Play(); */
-        }
-
-        public enum NotifAudio
-        {
-            BuzzAudio
+              Set a max cap to the title and if over put "..." same with message, full message and title displayed in inbox app.
+              Set TitleText and Message Text.
+              Play Animation & play a sound.
+              Send All Information To InboxApp */
         }
     }
 }

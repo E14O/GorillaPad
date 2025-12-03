@@ -13,21 +13,23 @@ namespace GorillaPad.Functions
     internal class PadHandler : MonoBehaviour
     {
         public static PadHandler instance;
-        public GameObject AppInterfaces, PadColour;
+
+        public GameObject AppInterfaces;
+        public GameObject PadColour;
 
         private bool LastState = false;
         private bool IsUnlocked = false;
         private bool SetPower = false;
         private bool IsReturning = false;
 
-        private float currentVolume = 0.5f;
-        private const float volumeStep = 0.1f;
+        private float CurrentVolume = 0.5f;
+        private const float VolumeStep = 0.1f;
 
-        private AudioSource powerAudio;
-        private AudioSource buttonAudio;
+        private AudioSource PowerAudio;
+        private AudioSource ButtonAudio;
         private AudioSource BuzzAudio;
 
-        void Start()
+        void Awake()
         {
             if (instance == null)
             {
@@ -46,15 +48,22 @@ namespace GorillaPad.Functions
         void Initialization()
         {
             ContentLoader.InitialiseContent();
+
             try
             {
-                var CustomProps = new ExitGames.Client.Photon.Hashtable{{ "GPHolding", false },{ "GPIsLeft", false },{ "GPMounted", true }, {Constants.CustomProp, Constants.Version } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(CustomProps);
+                var Properties = new ExitGames.Client.Photon.Hashtable
+                {
+                    { "GPHolding", false },
+                    { "GPIsLeft", false },
+                    { "GPMounted", true },
+                    { Constants.CustomProp, Constants.Version }
+                };
 
+                PhotonNetwork.LocalPlayer.SetCustomProperties(Properties);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                PadLogging.LogError($"Unable To Set Custom Prop, It Was Interrupted {e}");
+                PadLogging.LogError($"Failed to set custom properties: {ex}");
                 return;
             }
 
@@ -66,14 +75,15 @@ namespace GorillaPad.Functions
             AppInterfaces = ContentLoader.BundleParent.transform.Find("Canvas/AppInterfaces").gameObject;
             PadColour = ContentLoader.BundleParent.transform.Find("Model").gameObject;
 
-            ContentLoader.GetSounds(ref powerAudio, ref buttonAudio, ref BuzzAudio);
+            ContentLoader.GetSounds(ref PowerAudio, ref ButtonAudio, ref BuzzAudio);
             ApplyVolume();
 
-            Transform parent = ContentLoader.BundleParent.transform.GetChild(1);
-            PadButton.Create(parent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);
-            PadButton.Create(parent, "PowerButton", SelectedAudio.PowerAudio, TogglePower);
-            PadButton.Create(parent, "Volume+", SelectedAudio.ButtonAudio, IncreaseVolume);
-            PadButton.Create(parent, "Volume-", SelectedAudio.ButtonAudio, DecreaseVolume);
+            Transform buttonParent = ContentLoader.BundleParent.transform.Find("Canvas");
+
+            PadButton.Create(buttonParent, "HomeButton", SelectedAudio.ButtonAudio, ToggleMainFunction);
+            PadButton.Create(buttonParent, "PowerButton", SelectedAudio.PowerAudio, TogglePower);
+            PadButton.Create(buttonParent, "Volume+", SelectedAudio.ButtonAudio, IncreaseVolume);
+            PadButton.Create(buttonParent, "Volume-", SelectedAudio.ButtonAudio, DecreaseVolume);
         }
 
         void Update()
@@ -138,7 +148,6 @@ namespace GorillaPad.Functions
             }
         }
 
-
         void TogglePower()
         {
             if (SetPower)
@@ -156,23 +165,56 @@ namespace GorillaPad.Functions
 
                 IsUnlocked = false;
                 SetPower = false;
-
             }
             else
             {
                 ScreenManager.TopBar.SetActive(true);
+
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.LockScreen.SetActive(true);
+<<<<<<< Updated upstream
               
+=======
+<<<<<<< HEAD
+=======
+              
+>>>>>>> d103f4148e0d4d982d65683d411666112ee83846
+>>>>>>> Stashed changes
 
                 if (instance != null && instance.isActiveAndEnabled)
+                {
                     instance.StartCoroutine(instance.PlayLockScreenAnimation());
+                }
                 else
-                    PadLogging.LogError("Pad Handler: Error starting to Start Coroutine");
+                {
+                    PadLogging.LogError("Animation coroutine failed");
+                }
 
                 IsUnlocked = false;
                 SetPower = true;
+
+                NotificationManager.SendNotification("GorillaPad", "Hello!");
             }
+        }
+
+        void IncreaseVolume()
+        {
+            if (!SetPower)
+                return;
+
+            CurrentVolume = Mathf.Clamp01(CurrentVolume + VolumeStep);
+            ApplyVolume();
+            PadLogging.LogInfo($"Volume Increased: {Mathf.RoundToInt(CurrentVolume * 100)}%");
+        }
+
+        void DecreaseVolume()
+        {
+            if (!SetPower)
+                return;
+
+            CurrentVolume = Mathf.Clamp01(CurrentVolume + VolumeStep);
+            ApplyVolume();
+            PadLogging.LogInfo($"Volume Decreased: {Mathf.RoundToInt(CurrentVolume * 100)}%");
         }
 
         private IEnumerator PlayLockScreenAnimation()
@@ -181,45 +223,25 @@ namespace GorillaPad.Functions
             AnimationManager.CreateAnimation(ScreenManager.LockScreen, null, true);
         }
 
-        void IncreaseVolume()
-        {
-            if (!SetPower)
-                return;
-
-            currentVolume = Mathf.Clamp01(currentVolume + volumeStep);
-            ApplyVolume();
-            PadLogging.LogInfo($"Volume Increased: {Mathf.RoundToInt(currentVolume * 100)}%");
-        }
-
-        void DecreaseVolume()
-        {
-            if (!SetPower)
-                return;
-
-            currentVolume = Mathf.Clamp01(currentVolume - volumeStep);
-            ApplyVolume();
-            PadLogging.LogInfo($"Volume Decreased: {Mathf.RoundToInt(currentVolume * 100)}%");
-        }
-
         private void ApplyVolume()
         {
-            if (powerAudio != null) powerAudio.volume = currentVolume;
-            if (buttonAudio != null) buttonAudio.volume = currentVolume;
+            if (PowerAudio != null) PowerAudio.volume = CurrentVolume;
+            if (ButtonAudio != null) ButtonAudio.volume = CurrentVolume;
         }
 
         public static void ReturnPad()
         {
-            ExitGames.Client.Photon.Hashtable hash = new();
-            ExtensionMethods.AddOrUpdate(hash, "GPMounted", true);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            var Props = new ExitGames.Client.Photon.Hashtable();
+            ExtensionMethods.AddOrUpdate(Props, "GPMounted", true);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(Props);
 
-            if (instance != null)
-                instance.StartCoroutine(instance.ReturnRoutine());
+            instance?.StartCoroutine(instance.ReturnRoutine());
         }
 
         private IEnumerator ReturnRoutine()
         {
             var pad = ContentLoader.BundleParent;
+
             Vector3 startPos = pad.transform.position;
             Quaternion startRot = pad.transform.rotation;
 
@@ -227,10 +249,12 @@ namespace GorillaPad.Functions
             Quaternion targetRot = Constants.Asset.Rotation;
 
             float t = 0f;
+
             while (t < 1f)
             {
                 pad.transform.position = Vector3.Lerp(startPos, targetPos, t);
                 pad.transform.rotation = Quaternion.Lerp(startRot, targetRot, t);
+
                 t += Time.deltaTime * 3f;
                 yield return null;
             }
@@ -243,6 +267,5 @@ namespace GorillaPad.Functions
             PadHolding.LetGo = false;
             IsReturning = false;
         }
-
     }
 }
