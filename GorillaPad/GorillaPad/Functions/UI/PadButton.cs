@@ -10,41 +10,40 @@ namespace GorillaPad.Functions.UI
         private Action OnButtonPress;
         private SelectedAudio selectedSound;
 
-        public static PadButton Create(Transform Parent, string ObjectName, SelectedAudio SoundType, Action ExecuteFunction)
+        public static PadButton Create(Transform parent, string objectName, SelectedAudio soundType, Action executeFunction)
         {
-            GameObject Obj = Parent.Find(ObjectName).gameObject;
-            if (Obj == null)
+
+            GameObject obj = parent.Find(objectName).gameObject;
+            if (obj == null)
             {
-                PadLogging.LogError($"Unable to find [{ObjectName}] in [{Parent}]");
+                PadLogging.LogError("Could Not Find");
                 return null;
             }
 
-            PadButton PbScript = Obj.GetComponent<PadButton>() ?? Obj.AddComponent<PadButton>();
-            BoxCollider ObjCollider = Obj.GetComponent<BoxCollider>() ?? Obj.AddComponent<BoxCollider>();
-            ObjCollider.isTrigger = true;
+            PadButton pbScript = obj.GetComponent<PadButton>() ?? obj.AddComponent<PadButton>();
+            BoxCollider objCollider = obj.GetComponent<BoxCollider>() ?? obj.AddComponent<BoxCollider>();
+            objCollider.isTrigger = true;
 
-            Obj.layer = 18;
+            obj.layer = 18;
 
-            PbScript.OnButtonPress = ExecuteFunction;
-            PbScript.selectedSound = SoundType;
-            return PbScript;
+            pbScript.OnButtonPress = executeFunction;
+            pbScript.selectedSound = soundType;
+            return pbScript;
         }
 
         public override void ButtonActivation()
         {
             base.ButtonActivation();
 
-            AudioSource PowerAudio = null;
-            AudioSource ButtonAudio = null;
+            AudioSource powerAudio = null;
+            AudioSource buttonAudio = null;
             AudioSource BuzzAudio = null;
-
-            ContentLoader.GetSounds(ref PowerAudio, ref ButtonAudio, ref BuzzAudio);
+            ContentLoader.GetSounds(ref powerAudio, ref buttonAudio, ref BuzzAudio);
 
             if (selectedSound == SelectedAudio.PowerAudio)
-                PowerAudio.Play();
-
+                powerAudio.Play();
             else if (selectedSound == SelectedAudio.ButtonAudio)
-                ButtonAudio.Play();
+                buttonAudio.Play();
 
             pressButtonSoundIndex = 0;
             OnButtonPress.Invoke();
