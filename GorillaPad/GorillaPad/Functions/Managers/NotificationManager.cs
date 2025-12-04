@@ -1,123 +1,53 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using GorillaPad.Tools;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
-using GFriends = GorillaFriends.Main;
 
 namespace GorillaPad.Functions.Managers
 {
-    public class NotificationManager : MonoBehaviourPunCallbacks
+    public class NotificationManager : MonoBehaviour
     {
-        private NotifAudio Audio;
-        public static GameObject NotificationLockScreen, LockScreen;
-        private int NotifAmountLockScreen = 0;
-        private static Dictionary<GameObject, float> NotificationTimes = new Dictionary<GameObject, float>();
-        private static NotificationManager instance;
+        public static GameObject TemporaryNotification { get; private set; }
+        public static GameObject LockScreenGrid { get; private set; }
+
+        private int NotificationCount = 0;
 
         void Start()
         {
-            NotificationLockScreen = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid/Notification").gameObject;
-            LockScreen = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid").gameObject;
-            NotificationLockScreen.SetActive(false);
-            instance = this;
-            StartCoroutine(UpdateNotificationTimes());
-        }
+            TemporaryNotification = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid/Notification").gameObject;
+            LockScreenGrid = ContentLoader.BundleParent.transform.Find("Canvas/LockScreen/Grid").gameObject;
 
-        private IEnumerator UpdateNotificationTimes()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(1f);
-                UpdateAllNotificationTimes();
-            }
-        }
-
-        private static void UpdateAllNotificationTimes()
-        {
-            var notificationsToRemove = new List<GameObject>();
-
-            foreach (var kvp in NotificationTimes)
-            {
-                if (kvp.Key == null)
-                {
-                    notificationsToRemove.Add(kvp.Key);
-                    continue;
-                }
-
-                float elapsedSeconds = Time.time - kvp.Value;
-                int seconds = Mathf.FloorToInt(elapsedSeconds);
-                
-
-                Text timeText = kvp.Key.transform.GetChild(2).GetComponent<Text>();
-                if (timeText != null)
-                {
-                    timeText.text = $"{seconds}s ago";
-                   
-                }
-            }
-
-            foreach (var notif in notificationsToRemove)
-            {
-                NotificationTimes.Remove(notif);
-            }
-        }
-
-        public override void OnJoinedRoom()
-        {
-            SendNotification("RoomInfo", "You have joined a room");
-        }
-        public override void OnPlayerEnteredRoom(Player newPlayer)
-        {
-            base.OnPlayerEnteredRoom(newPlayer);
-            bool isFriend = GFriends.IsFriend(newPlayer.UserId);
-            string message = isFriend 
-                ? $"your friend \"{newPlayer.NickName}\" has joined the room"
-                : $"{newPlayer.NickName} has joined the room";
-            SendNotification("RoomInfo", message);
-        }
-        public override void OnPlayerLeftRoom(Player otherPlayer)
-        {
-            base.OnPlayerLeftRoom(otherPlayer);
-            
-            SendNotification("RoomInfo", $"{otherPlayer.NickName} has left the room");
+            TemporaryNotification.SetActive(false);
         }
 
         public static void SendNotification(string Title, string Message)
         {
-            /* Set a max cap to the title and if over put "..." same with message, full message and title displayed in inbox app.
-               Set TitleText and Message Text.
-               Play Animation & play a sound.
-               Send All Information To InboxApp */
+            var Notification = Instantiate(TemporaryNotification, LockScreenGrid.transform, false);
+            Notification.transform.SetSiblingIndex(0);
 
+            Notification.transform.GetChild(0).GetComponent<Text>().text = Title;
+            Notification.transform.GetChild(1).GetComponent<Text>().text = Message;
 
+            Notification.transform.GetChild(2).GetComponent<Text>().text = $"{System.DateTime.Now}";
+            Notification.SetActive(true);
 
-            var NewNotif = Instantiate(NotificationLockScreen, NotificationLockScreen.transform.parent);
-            NewNotif.transform.SetParent(LockScreen.transform, false);
-            NewNotif.transform.GetChild(0).GetComponent<Text>().text = Title;
-            NewNotif.transform.GetChild(1).GetComponent<Text>().text = Message;
-
-            float creationTime = Time.time;
-            NotificationTimes[NewNotif] = creationTime;
-            NewNotif.transform.GetChild(2).GetComponent<Text>().text = "0s ago";
-            NewNotif.SetActive(true);
-
-
+            PadLogging.LogInfo($"Received Notification: {Title}, {Message}");
 
             /* AudioSource BuzzAudio = null;
-            AudioSource PowerAudioNull = null;
-            AudioSource ButtonAudioNull = null;
-            ContentLoader.GetSounds(ref PowerAudioNull, ref ButtonAudioNull, ref BuzzAudio);
+               AudioSource PowerAudioNull = null;
+               AudioSource ButtonAudioNull = null;
 
-            if (Audio == NotifAudio.BuzzAudio)
-                BuzzAudio.Play(); */
-        }
+               ContentLoader.GetSounds(ref PowerAudioNull, ref ButtonAudioNull, ref BuzzAudio);
+               BuzzAudio.Play();
 
-        public enum NotifAudio
-        {
-            BuzzAudio
+             /* AudioSource BuzzAudio = null;
+             AudioSource PowerAudioNull = null;
+             AudioSource ButtonAudioNull = null;
+             ContentLoader.GetSounds(ref PowerAudioNull, ref ButtonAudioNull, ref BuzzAudio);
+
+             if (Audio == NotifAudio.BuzzAudio)
+                 BuzzAudio.Play(); */
         }
     }
 }
