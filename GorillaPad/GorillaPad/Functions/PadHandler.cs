@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace GorillaPad.Functions
 {
-    internal class PadHandler : MonoBehaviour
+    public class PadHandler : MonoBehaviour
     {
         public static PadHandler instance;
 

@@ -2,7 +2,7 @@
 
 namespace GorillaPad.Tools
 {
-    internal static class PadLogging
+    public class PadLogging
     {
         private static ManualLogSource logger;
 
