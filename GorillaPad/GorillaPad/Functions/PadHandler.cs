@@ -170,8 +170,6 @@ namespace GorillaPad.Functions
                 ScreenManager.TopBar.SetActive(true);
                 ScreenManager.HomeScreen.SetActive(false);
                 ScreenManager.LockScreen.SetActive(true);
-
-
                 if (instance != null && instance.isActiveAndEnabled)
                     instance.StartCoroutine(instance.PlayLockScreenAnimation());
                 else
