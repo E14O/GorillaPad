@@ -37,7 +37,7 @@ namespace GorillaPad.Functions.Managers
             NotificationOtherScreen.SetActive(false);
         }
 
-        public void SendNotification(string title, string message)
+        public static void SendNotification(string title, string message)
         {
             PadLogging.LogInfo($"Received Notification: {title}, {message}");
 
@@ -47,7 +47,7 @@ namespace GorillaPad.Functions.Managers
             StartCoroutine(CreateHomeScreenNotification(title, message));
         }
 
-        private IEnumerator CreateLockScreenNotification(string title, string message)
+        private static IEnumerator CreateLockScreenNotification(string title, string message)
         {
 
             GameObject Notification = Instantiate(NotificationLockScreen, LockScreenGrid.transform, false);
@@ -72,7 +72,7 @@ namespace GorillaPad.Functions.Managers
                 Destroy(Notification);
         }
 
-        private IEnumerator CreateHomeScreenNotification(string title, string message)
+        private static IEnumerator CreateHomeScreenNotification(string title, string message)
         {
             while (NotificationActive)
                 yield return null;
